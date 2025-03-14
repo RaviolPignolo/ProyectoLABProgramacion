@@ -22,7 +22,7 @@ Por ahora solo se pueden ver las estadisticas de los campeones e items y agregar
 
 ```python
 
- - Comandos de Campeones
+ # Comandos de Campeones
     NombreCampeon.level_up()
       # Sube de nivel al campeón, aumentando ciertas estadísticas usando los cálculos de League of Legends
     NombreCampeon.simple_stats()
@@ -36,7 +36,7 @@ Por ahora solo se pueden ver las estadisticas de los campeones e items y agregar
     NombreCampeon.item_list()
       # Lista los items que tiene el campeón en el inventario
 
- - Comandos de items
+ # Comandos de items
     NombreItem.item_info()
       # Lista las estadísticas que otorga el item
 
