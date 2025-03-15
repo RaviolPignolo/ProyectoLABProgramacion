@@ -30,7 +30,7 @@ class Item:
     moveSpeedFlat: int
     moveSpeed: float #%
 
-    #Los dejo como estadistica del item o habilidad? o.o?
+    #Los dejo como estadistica del item o habilidad? o.o? #dejalo como habilidad
     # healReduction
     # shieldReduction
     #omnivamp
@@ -62,13 +62,13 @@ class Item:
         self.moveSpeedFlat = moveSpeedFlat
         self.moveSpeed = moveSpeed
 
-    
+    # Método para ver las estadisticas que da el item
     def item_info(self):
         print("Nombre: ", self.name)
         print("Coste: ", self.cost, " Oro")
         print("Vendible por: ", self.sell, " Oro")
         
-        stats = {
+        stats = {       # Creo un diccionario creando el nombre de la estadistica y asignandole un valor
         #   stat_name: stat_value
             "Health": self.health,
             "Health Regen(%)": (self.healthRegen * 100),
@@ -92,7 +92,7 @@ class Item:
             "Movement Speed": self.moveSpeedFlat,
             "Movement Speed(%)": (self.moveSpeed * 100)
         }
-        # Mostrar solo estadisticas que sean mayores a 0
+        # Recorro el diccionario y muestro los valores mayores a 0 que tenga el item
         for stat_name, stat_value in stats.items():
             if stat_value > 0:
                 print(f"{stat_name}: {stat_value}")

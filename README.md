@@ -3,7 +3,9 @@ Simula un 1v1 entre los 170 campeones de League of Legends actualizado hasta el 
 
 - Version 0.1
 
-- Notas: Todavía tengo que ver cómo implementar las habilidades de los campeónes, por lo que actualmente solo se podrán hacer daño mediante Ataques Básicos. Se recomienda el uso de campeones que su daño principal provenga de los Ataques Básicos.
+- Nota: Todavía tengo que ver cómo implementar las habilidades de los campeónes, por lo que actualmente solo se podrán hacer daño mediante Ataques Básicos. Se recomienda el uso de campeones que su daño principal provenga de los Ataques Básicos.
+- Nota: Tengo errores en las velocidad de ataque, sigo revisando si es un problema del cálculo y/o asignación de valores o variables.
+- Nota: Tengo que armar los daños críticos para que funcionen correctamente
                                
 ## Installation
 
@@ -35,7 +37,16 @@ Por ahora solo se pueden ver las estadisticas de los campeones e items y agregar
       # Elimina un item del inventario del campeón
     NombreCampeon.item_list()
       # Lista los items que tiene el campeón en el inventario
+    NombreCampeon.update_stats()
+      # Es utilizado por remove_item y add_item para actualizar las estadisticas de los campeones al darles o quitarles items
+    NombreCampeon.realizar_daño(NombreCampeon)
+      # El campeón que lo ejecuta iniciará una pelea contra el campeón dado por parámetro hasta que uno de los dos muera
+      
+    NombreCampeon.recibir_daño(NombreCampeon)
+      # El campeón que lo ejecuta calcula el daño que recibe luego de los cálculos
+      # (Por ahora solo toma en cuenta el AD y Armor como stats)
 
+      
  # Comandos de items
     NombreItem.item_info()
       # Lista las estadísticas que otorga el item
