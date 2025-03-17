@@ -1,6 +1,30 @@
+import importlib
+import os
+from dataclasses import dataclass, field
 from Item import Item
 
-        #### Abilidades WIP ####
+CHAMPIONS_FOLDER = "Champions"
+
+
+    # Método para cargas los campeones
+def load_champion(champion_name: str):
+    module_name = f"{CHAMPIONS_FOLDER}.{champion_name}"
+    try:
+        module = importlib.import_module(module_name)
+        champ_class = getattr(module, champion_name)
+        return champ_class()
+    except (ModuleNotFoundError, AttributeError):
+        raise ImportError(f"No se encontró el campeón {champion_name} en {module_name}")
+
+    # Método para listar los campeones
+def list_champions():
+    champions = []
+    for filename in os.listdir(CHAMPIONS_FOLDER):
+        if filename.endswith(".py") and filename != "__init__.py":
+            champions.append(filename[:-3])
+    return champions
+
+
 
 class Champion:
     name: str
@@ -10,7 +34,7 @@ class Champion:
 
 # https://wiki.leagueoflegends.com/en-us/Champion_statistic
 
-    #Valores base del campeón que tienen escalado por nivel
+    # Valores base del campeón
     baseHealth: float
     baseHealthGrowth: float
     baseHealthRegen: float
@@ -30,16 +54,9 @@ class Champion:
     baseRange: float
     baseMoveSpeed: float
     baseAttackSpeed: float
-
+    
     # Valores actuales que se actualizan con subidas de nivel o adquiriendo objetos
-    actualHealth: float
-    actualHealthRegen: float
-    actualMana: float
-    actualManaRegen: float
-    actualAttackDamage: float
     actualAbilityPower: float
-    actualArmor: float
-    actualMagicResist: float
     actualHealShieldPower: float
     actualTenacity: float
     actualSlowResist: float
@@ -59,10 +76,31 @@ class Champion:
     actualAttackSpeedRatio: float
     actualBonusAttackSpeedLeveled: float
     actualBonusAttackSpeedExternal: float
+    # Se calculan despues del constructor con 'def __post_init__()'
+    actualHealth: float = field(init=False)
+    actualHealthRegen: float = field(init=False)
+    actualMana: float = field(init=False)
+    actualManaRegen: float = field(init=False)
+    actualAttackDamage: float = field(init=False)
+    actualArmor: float = field(init=False)
+    actualMagicResist: float = field(init=False)
+    actualRange: float = field(init=False)
+    actualMoveSpeed: float = field(init=False)
     
 
     # Constructor
-    def __init__(self, name, title, level, baseHealth, baseHealthGrowth, baseHealthRegen, baseHealthRegenGrowth, baseMana, baseManaGrowth, baseManaRegen, baseManaRegenGrowth, baseEnergy, baseEnergyRegen, baseAttackDamage, baseAttackDamageGrowth, baseArmor, baseArmorGrowth, baseMagicResist, baseMagicResistGrowth, baseRange, baseMoveSpeed, baseAttackSpeed, attackSpeedRatio, bonusAttackSpeed):
+    def __init__(self,
+                 name, title, level,
+                 baseHealth, baseHealthGrowth,
+                 baseHealthRegen, baseHealthRegenGrowth,
+                 baseMana, baseManaGrowth,
+                 baseManaRegen, baseManaRegenGrowth,
+                 baseEnergy, baseEnergyRegen,
+                 baseAttackDamage, baseAttackDamageGrowth,
+                 baseArmor, baseArmorGrowth,
+                 baseMagicResist, baseMagicResistGrowth,
+                 baseRange, baseMoveSpeed,
+                 baseAttackSpeed, attackSpeedRatio, bonusAttackSpeed):
         self.name = name
         self.title = title
         self.level = level
@@ -82,18 +120,24 @@ class Champion:
         self.baseArmorGrowth = baseArmorGrowth
         self.baseMagicResist = baseMagicResist
         self.baseMagicResistGrowth = baseMagicResistGrowth
+        self.baseRange = baseRange
+        self.baseMoveSpeed = baseMoveSpeed
         self.baseAttackSpeed = baseAttackSpeed
         self.attackSpeedRatio = attackSpeedRatio
         self.bonusAttackSpeed = bonusAttackSpeed
-        self.actualHealth = baseHealth
-        self.actualHealthRegen = baseHealthRegen
-        self.actualMana = baseMana
-        self.actualManaRegen = baseManaRegen
-        self.actualAttackDamage = baseAttackDamage
-        self.actualArmor = baseArmor
-        self.actualMagicResist = baseMagicResist
-        self.actualRange = baseRange
-        self.actualMoveSpeed = baseMoveSpeed
+        self.__post_init__()
+
+    # Post Constructor
+    def __post_init__(self):
+        self.actualHealth = self.baseHealth
+        self.actualHealthRegen = self.baseHealthRegen
+        self.actualMana = self.baseMana
+        self.actualManaRegen = self.baseManaRegen
+        self.actualAttackDamage = self.baseAttackDamage
+        self.actualArmor = self.baseArmor
+        self.actualMagicResist = self.baseMagicResist
+        self.actualRange = self.baseRange
+        self.actualMoveSpeed = self.baseMoveSpeed
         self.actualHealShieldPower = 0
         self.actualTenacity = 0
         self.actualSlowResist = 0
@@ -115,6 +159,9 @@ class Champion:
         # ¿self.actualGolgGeneration = 0? Idea
         # Iniciación del inventario
         self.items = [None] * 6
+
+
+
 
 
     # Método para subir de nivel
@@ -179,6 +226,7 @@ class Champion:
 
     # Método para obtener información básica
     def simple_stats(self):
+        print("Campeón: ", self.name)
         print("Nivel: ", self.level)
         print("Salud: ", self.actualHealth)
         print("Regeneración de Salud: ", self.actualHealthRegen)
@@ -272,10 +320,10 @@ class Champion:
         print(f"{self.name} ataca a {enemy.name}")
         print("------------------------------------------------------------------------------------------------------")
         print(f"{self.name}")
-        print(f"{self.simple_stats()}")
+        print(self.simple_stats())
         print("------------------------------------------------------------------------------------------------------")
         print(f"{enemy.name}")
-        print(f"{enemy.simple_stats()}")
+        print(enemy.simple_stats())
         print("------------------------------------------------------------------------------------------------------")
         
         while(self.itsAlive and enemy.itsAlive == True): # Mientras los dos esten vivos se siguen pegando
@@ -294,7 +342,7 @@ class Champion:
 
     # self recibe daño de enemy
     def recibir_daño(self, enemy):
-        daño_recibido = max(enemy.actualAttackDamage - self.actualArmor, 0) #Max para evitar que el daño sea negativo
+        daño_recibido = max(enemy.actualAttackDamage - self.actualArmor, 0) #Para evitar que el daño sea negativo
 
         self.actualHealth -= daño_recibido
         print(f"Daño realizado por {enemy.name} hacia {self.name}: {daño_recibido}")
@@ -302,3 +350,4 @@ class Champion:
 
         if (self.actualHealth <= 0):
             self.itsAlive = False
+
