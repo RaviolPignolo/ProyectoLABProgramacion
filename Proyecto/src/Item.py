@@ -1,34 +1,32 @@
 
-        #### Abilidades Pasivas WIP ####
 
 class Item:
-
     name: str
     cost: int
     sell: int
 
     # Stats que pueden dar los items
-    health: int
-    healthRegen: float #%
+    hp: int
+    hp_regen: float #%
     mana: int
-    manaRegen: float #%
-    attackDamage: int
-    attackSpeed: float #%
-    abilityPower: int
+    mana_regen: float #%
+    ad: int
+    as_: float #%
+    ap: int
     armor: int
-    magicResist: int
-    healShieldPower: float #%
+    mr: int
+    healshield_power: float #%
     tenacity: float #%
-    criticalStrikeChance: float #%
-    criticalStrikeDamage: float #%
-    armorPenetrationFlat: int
-    armorPenetrationPercent: float #%
-    magicPenetrationFlat: int
-    magicPenetrationPercent: float #%
-    lifeSteal: float #%
-    abilityHaste: int
-    moveSpeedFlat: int
-    moveSpeed: float #%
+    crit_chance: float #%
+    crit_damage: float #%
+    armorpen_flat: int
+    armorpen_percent: float #%
+    magicpen_flat: int
+    magicpen_percent: float #%
+    lifesteal: float #%
+    ah: int
+    movespeed_flat: int
+    movespeed_percent: float #%
 
     #Los dejo como estadistica del item o habilidad? o.o? #dejalo como habilidad
     # healReduction
@@ -36,31 +34,31 @@ class Item:
     #omnivamp
 
     # Constructor
-    def __init__(self, name, cost, sell, health, healthRegen, mana, manaRegen, attackDamage, attackSpeed, abilityPower, armor, magicResist, healShieldPower, tenacity, criticalStrikeChance, criticalStrikeDamage, armorPenetrationFlat, armorPenetrationPercent, magicPenetrationFlat, magicPenetrationPercent, lifeSteal, abilityHaste, moveSpeedFlat, moveSpeed):
+    def __init__(self, name, cost, sell, hp, hp_regen, mana, mana_regen, ad, as_, ap, armor, mr, healshield_power, tenacity, crit_chance, crit_damage, armorpen_flat, armorpen_percent, magicpen_flat, magicpen_percent, lifeSteal, ah, movespeed_flat, movespeed_percent):
         self.name = name
         self.cost = cost
         self.sell = sell
-        self.health = health
-        self.healthRegen = healthRegen
+        self.hp = hp
+        self.hp_regen = hp_regen
         self.mana = mana
-        self.manaRegen = manaRegen
-        self.attackDamage = attackDamage
-        self.attackSpeed = attackSpeed
-        self.abilityPower = abilityPower
+        self.mana_regen = mana_regen
+        self.ad = ad
+        self.as_ = as_
+        self.ap = ap
         self.armor = armor
-        self.magicResist = magicResist
-        self.healShieldPower = healShieldPower
+        self.mr = mr
+        self.healshield_power = healshield_power
         self.tenacity = tenacity
-        self.criticalStrikeChance = criticalStrikeChance
-        self.criticalStrikeDamage = criticalStrikeDamage
-        self.armorPenetrationFlat = armorPenetrationFlat
-        self.armorPenetrationPercent = armorPenetrationPercent
-        self.magicPenetrationFlat = magicPenetrationFlat
-        self.magicPenetrationPercent = magicPenetrationPercent
-        self.lifeSteal = lifeSteal
-        self.abilityHaste = abilityHaste
-        self.moveSpeedFlat = moveSpeedFlat
-        self.moveSpeed = moveSpeed
+        self.crit_chance = crit_chance
+        self.crit_damage = crit_damage
+        self.armorpen_flat = armorpen_flat
+        self.armorpen_percent = armorpen_percent
+        self.magicpen_flat = magicpen_flat
+        self.magicpen_percent = magicpen_percent
+        self.lifesteal = lifeSteal
+        self.ah = ah
+        self.movespeed_flat = movespeed_flat
+        self.movespeed_percent = movespeed_percent
 
     # Método para ver las estadisticas que da el item
     def item_info(self):
@@ -70,16 +68,16 @@ class Item:
         
         stats = {       # Creo un diccionario creando el nombre de la estadistica y asignandole un valor
         #   stat_name: stat_value
-            "Health": self.health,
-            "Health Regen(%)": (self.healthRegen * 100),
+            "Health": self.hp,
+            "Health Regen(%)": (self.hp_regen * 100),
             "Mana": self.mana,
-            "Mana Regen(%)": (self.manaRegen * 100),
-            "Attack Damage": self.attackDamage,
-            "Attack Speed(%)": (self.attackSpeed * 100),
-            "Ability Power": self.abilityPower,
+            "Mana Regen(%)": (self.mana_regen * 100),
+            "Attack Damage": self.ad,
+            "Attack Speed(%)": (self.as_ * 100),
+            "Ability Power": self.ap,
             "Armor": self.armor,
-            "Magic Resistance": self.magicResist,
-            "Heal & shield power(%)": (self.healShieldPower * 100),
+            "Magic Resistance": self.mr,
+            "Heal & shield power(%)": (self.healshield_power * 100),
             "Tenacity": (self.tenacity * 100),
             "Critical strike chance(%)": (self.criticalStrikeChance * 100),
             "Critical strike damage(%)": (self.criticalStrikeDamage * 100),
