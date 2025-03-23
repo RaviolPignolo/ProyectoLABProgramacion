@@ -1,6 +1,7 @@
 from Champion import Champion
-from Champion import load_champion
 from Item import Item
+from Champion import load_champion
+from Item import load_item
 
 # Campeones
 Aatrox = load_champion("Aatrox")
@@ -20,13 +21,12 @@ TahmKench = load_champion("TahmKench")
 Twitch = load_champion("Twitch")
 
 # Items
-Guinsoo = Item("Guinsoo's Rageblade", 3000, 2100, 0, 0, 0, 0, 30, 0.25, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-Opportunity = Item("Opportunity", 2700, 1890, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0 , 0, 0, 0)
-Bloodthirster = Item("Bloodthirster", 3400, 2380, 0, 0, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.15, 0, 0, 0)
-#Revisar SpiritVisage que se aplique correctamente el 100% de regeneración de vida
-SpiritVisage = Item("Spirit Visage", 2700, 1890, 400, 1.00, 0, 0, 0, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0)
-Thornmail = Item("Thornmail", 2450, 1715, 150, 0, 0, 0, 0, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-Jaksho = Item("Jak'sho, The Protean", 3200, 2240, 350, 0, 0, 0, 0, 0, 0, 45, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+Bloodthirster = load_item("Bloodthirster")
+Guinsoo = load_item("Guinsoo")
+Opportunity = load_item("Opportunity")
+Jaksho = load_item("Jaksho")
+Thornmail = load_item("Thornmail")
+SpiritVisage = load_item("SpiritVisage")
+BlackfireTorch = load_item("BlackfireTorch")
 
 # Hay que empezar a armar el planteo de los turnos
-Ambessa.realizar_daño(Amumu)

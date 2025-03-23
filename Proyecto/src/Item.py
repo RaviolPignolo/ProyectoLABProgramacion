@@ -1,3 +1,27 @@
+import importlib
+import os
+
+ITEMS_FORLDER = "Items" # Carpeta que contiene los items
+
+# Éstos dos métodos son para que el Main pueda cargar los items correctamente desde sus archivos .py
+
+# Método para cargar los items
+def load_item(item_name: str):
+    module_name = f"{ITEMS_FORLDER}.{item_name}"
+    try:
+        module = importlib.import_module(module_name)
+        item_class = getattr(module, item_name)
+        return item_class()
+    except (ModuleNotFoundError, AttributeError):
+        raise ImportError(f"No se encontró el item {item_name} en {module_name}")
+    
+# Método para listar los items
+def list_items():
+    items = []
+    for filename in os.listdir(ITEMS_FORLDER):
+        if filename.endswith(".py") and filename != "__init__.py":
+            items.append(filename[:-3])
+    return items
 
 
 class Item:
@@ -28,13 +52,9 @@ class Item:
     movespeed_flat: int
     movespeed_percent: float #%
 
-    #Los dejo como estadistica del item o habilidad? o.o? #dejalo como habilidad
-    # healReduction
-    # shieldReduction
-    #omnivamp
 
     # Constructor
-    def __init__(self, name, cost, sell, hp, hp_regen, mana, mana_regen, ad, as_, ap, armor, mr, healshield_power, tenacity, crit_chance, crit_damage, armorpen_flat, armorpen_percent, magicpen_flat, magicpen_percent, lifeSteal, ah, movespeed_flat, movespeed_percent):
+    def __init__(self, name, cost, sell, hp, hp_regen, mana, mana_regen, ad, as_, ap, armor, mr, healshield_power, tenacity, crit_chance, crit_damage, armorpen_flat, armorpen_percent, magicpen_flat, magicpen_percent, lifesteal, ah, movespeed_flat, movespeed_percent):
         self.name = name
         self.cost = cost
         self.sell = sell
@@ -55,7 +75,7 @@ class Item:
         self.armorpen_percent = armorpen_percent
         self.magicpen_flat = magicpen_flat
         self.magicpen_percent = magicpen_percent
-        self.lifesteal = lifeSteal
+        self.lifesteal = lifesteal
         self.ah = ah
         self.movespeed_flat = movespeed_flat
         self.movespeed_percent = movespeed_percent

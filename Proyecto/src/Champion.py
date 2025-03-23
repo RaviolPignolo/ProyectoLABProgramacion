@@ -4,8 +4,10 @@ import math
 from dataclasses import dataclass, field
 from Item import Item
 
-CHAMPIONS_FOLDER = "Champions"
+CHAMPIONS_FOLDER = "Champions" # Carpeta que contiene a los campeones
 
+
+# Éstos dos métodos son para que el Main pueda cargar los campeones correctamente desde sus archivos .py
 
     # Método para cargas los campeones
 def load_champion(champion_name: str):
@@ -26,14 +28,13 @@ def list_champions():
     return champions
 
 
-
+# https://wiki.leagueoflegends.com/en-us/Champion_statistic
 class Champion:
     name: str
     title: str
     level: int
     its_alive: bool = True
 
-# https://wiki.leagueoflegends.com/en-us/Champion_statistic
 
     # Valores base del campeón
     base_hp: float
@@ -115,7 +116,7 @@ class Champion:
         self.baseAS = base_as
         self.as_ratio = as_ratio
         self.bonus_as = bonus_as
-        self.__post_init__()
+        self.__post_init__() # Post constructor
 
     # Post Constructor
     def __post_init__(self):
@@ -153,8 +154,6 @@ class Champion:
 
 
 
-
-
     # Método para subir de nivel
     def level_up(self):
         if self.level < 18:
@@ -179,6 +178,8 @@ class Champion:
         else:
             print("¡Ya has alcanzado el nivel máximo!")
 
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL SEGUIMIENTO DE LAS ESTADISTICAS =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
     # Método para obtener información básica
     def simple_stats(self):
         print("Campeón: ", self.name)
@@ -196,7 +197,6 @@ class Champion:
         print("Ability Haste: ", self.actual_ah)
         print("Chance de Critico: ", self.actual_crit_chance,"%")
         print("Velocidad de movimiento: ", self.actual_move_speed)
-
 
     # Método para obtener información extra
     def extended_stats(self):
@@ -219,6 +219,7 @@ class Champion:
         print(f"Level: {self.level}")
         print(f"Actual Attack Speed Ratio: {self.actual_as_ratio}")
 
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON LOS ITEMS =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     # Método para agregar un item al inventario
     def add_item(self, item):
@@ -261,7 +262,7 @@ class Champion:
         self.actual_ap += item.ap * factor
         self.actual_armor += item.armor * factor
         self.actual_mr += item.mr * factor
-        self.actual_healthshield_power += item.healshield_power * factor
+        self.actual_healshield_power += item.healshield_power * factor
         self.actual_tenacity += item.tenacity * factor
         self.actual_crit_chance += item.crit_chance * factor
         self.actual_crit_damage += item.crit_damage * factor
@@ -269,7 +270,7 @@ class Champion:
         self.actual_armorpen_percent += item.armorpen_percent * factor
         self.actual_magicpen_flat += item.magicpen_flat * factor
         self.actual_magicpen_percent += item.magicpen_percent * factor
-        self.actual_lifesteal += item.lifeSteal * factor
+        self.actual_lifesteal += item.lifesteal * factor
         self.actual_ah += item.ah * factor
         self.actual_move_speed += item.movespeed_flat * factor
         self.actual_move_speed += item.movespeed_percent * factor
@@ -277,6 +278,7 @@ class Champion:
         self.total_bonus_as = self.actual_bonus_as_level + self.actual_bonus_as_external
         self.actual_as = self.baseAS * (1 + self.total_bonus_as)
 
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL COMBATE =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     # Método para inflingir daño
     def realizar_daño(self, enemy):
@@ -290,28 +292,36 @@ class Champion:
         print(enemy.simple_stats())
         print("------------------------------------------------------------------------------------------------------")
         
-        while(self.its_alive and enemy.its_alive == True): # Mientras los dos esten vivos se siguen pegando
+        while(self.its_alive and enemy.its_alive == True): # Mientras uno de los dos siga vivo se van a seguir peleando
             enemy.recibir_daño(self)
             self.recibir_daño(enemy)
 
-            if(enemy.its_alive != True and self.its_alive != True):
+            if(enemy.its_alive != True and self.its_alive != True): #Ambos mueren
                 print(f"{self.name} y {enemy.name} murieron")
                 break
-            elif(enemy.its_alive != True and self.its_alive == True):
+            elif(enemy.its_alive != True and self.its_alive == True): #Gana self
                 print(f"{enemy.name} fue derrotado por {self.name}")
                 break
-            elif(enemy.its_alive == True and self.its_alive != True):
-                print(f"{self.name} fue derrotado por {enemy.name}")
+            elif(enemy.its_alive == True and self.its_alive != True): #Gana enemy
+                print(f"{self.name} fue derrotado por {enemy.name}") 
                 break
 
     # self recibe daño de enemy
     def recibir_daño(self, enemy):
-        daño_recibido = max(enemy.actual_ad - self.actual_armor, 0) #Para evitar que el daño sea negativo
+        daño_recibido = max(enemy.actual_ad - self.actual_armor, 0)
+        """
+        max(... , 0) hace que el resultado de la resta que tome daño_recibido sea el de mayor valor entre enemy.actual_ad y self.actual_armor,
+        haciendo que en caso de:
+            enemy.actual_ad > self.actual_armor  -> logicamente el daño restante se aplicara a la vida
+
+            enemy.actual_ad < self.actual_armor  -> el daño sería negativo, entra en funcionamiento max(..., 0) y le da a daño_recibido el valor 0
+        """
 
         self.actual_hp -= daño_recibido
+        self.actual_hp = max(self.actual_hp, 0) # Para que la vida no sea negativa
         print(f"Daño realizado por {enemy.name} hacia {self.name}: {daño_recibido}")
         print(f"Salud de {self.name} actualizado a: {self.actual_hp}")
 
-        if (self.actual_hp <= 0):
+        if (self.actual_hp <= 0): # Despues de cada golpe revisa si alguno de los dos murio, si ocurre se termina el while() y se da un ganador
             self.its_alive = False
 

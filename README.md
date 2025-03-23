@@ -1,12 +1,9 @@
 # =-=-=-= Simulador 1v1 entre campones de LoL =-=-=-=
 Simula un 1v1 entre los 170 campeones de League of Legends actualizado hasta el parche 25.05
 
-- Version 0.1
-
-- Nota: Todavía tengo que ver cómo implementar las habilidades de los campeónes, por lo que actualmente solo se podrán hacer daño mediante Ataques Básicos. Se recomienda el uso de campeones que su daño principal provenga de los Ataques Básicos.
-- Nota: Tengo errores en las velocidad de ataque, sigo revisando si es un problema del cálculo y/o asignación de valores o variables.
+- Nota: Todavía tengo que ver cómo implementar las habilidades de los campeónes, por lo que actualmente el método de ataque solo toma como variables el AD y Armor. Se recomienda el uso de campeones que su daño principal provenga de los Ataques Básicos.
 - Nota: Tengo que armar los daños críticos para que funcionen correctamente
-                               
+
 ## Installation
 
 . Clona el repositorio github
@@ -20,8 +17,6 @@ Simula un 1v1 entre los 170 campeones de League of Legends actualizado hasta el 
 
 En el archivo Main.py encontrarás algunos campeones e items ya creados.
 
-Por ahora solo se pueden ver las estadisticas de los campeones e items y agregarle items a los campeones (aunque no le suma estadisticas al campeón (Aún) )
-
 ```python
 
  # Comandos de Campeones
@@ -31,6 +26,8 @@ Por ahora solo se pueden ver las estadisticas de los campeones e items y agregar
       # Lista las estadísticas principales del campeón
     NombreCampeon.extended_stats()
       # Lista las demás estadisticas del campeón
+    NombreCampeon.as_stats()
+      # Lista las estadisticas relacionadas con la velocida de ataque para corroborar el correcto funcionamiento
     NombreCampeon.add_item(NombreItem)
       # Agrega un item al inventario del campeón con un límite de 6
     NombreCampeon.remove_item(NombreItem)
@@ -40,8 +37,7 @@ Por ahora solo se pueden ver las estadisticas de los campeones e items y agregar
     NombreCampeon.update_stats()
       # Es utilizado por remove_item y add_item para actualizar las estadisticas de los campeones al darles o quitarles items
     NombreCampeon.realizar_daño(NombreCampeon)
-      # El campeón que lo ejecuta iniciará una pelea contra el campeón dado por parámetro hasta que uno de los dos muera
-      
+      # El campeón que lo ejecuta iniciará una pelea contra el campeón dado por parámetro hasta que uno de los dos o ambos mueran
     NombreCampeon.recibir_daño(NombreCampeon)
       # El campeón que lo ejecuta calcula el daño que recibe luego de los cálculos
       # (Por ahora solo toma en cuenta el AD y Armor como stats)
@@ -54,17 +50,16 @@ Por ahora solo se pueden ver las estadisticas de los campeones e items y agregar
       
 ```
 
-
 ## Roadmap
 
-- Agregar todos los campeones (7/170)
+- Agregar todos los campeones (15/170)
 
 - Agregar todos los item
   - Starter: (0/7)
   - Potions and Consumables: (0/6)
   - Basic Items (0/15)
   - Epic Items (0/47)
-  - Legendary Items (6/106)
+  - Legendary Items (7/106)
 
 - Implementas habilidades y pasivas de campeones
 
@@ -75,6 +70,16 @@ Por ahora solo se pueden ver las estadisticas de los campeones e items y agregar
 - Implementar entorno gráfico
 
 - Implementar una opción "ver detalles" para ver todos los números cuando se calculan los daños y defensas
+
+## Tests
+
+Para realizar los tests se debe ejecutar el siguiente comando
+
+```python
+  python -m unittest discover -s test
+```
+
+
 ## Authors
 
 - [@RaviolPignolo](https://github.com/RaviolPignolo)
