@@ -1,4 +1,4 @@
-from Champion import Champion
+from ..Champion import Champion
 
 class Alistar(Champion):
     def __init__(self):

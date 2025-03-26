@@ -2,7 +2,7 @@ import importlib
 import os
 import math
 from dataclasses import dataclass, field
-from Item import Item
+from .Item import Item
 
 CHAMPIONS_FOLDER = "Champions" # Carpeta que contiene a los campeones
 

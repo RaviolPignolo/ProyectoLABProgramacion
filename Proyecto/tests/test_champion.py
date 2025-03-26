@@ -2,20 +2,21 @@ import unittest
 from src.Champion import load_champion #Importo el metodo para cargar los campeones
 from src.Item import load_item #Importo el metodo para cargar los items
 from src.Champion import Champion # Importo la clase Champion
-from src.Champions import Karthus # Importo al campeón Karthus de su propio archivo .py
-from src.Champions import Twitch # Importo al campeón Twitch de su propio archivo .py
-from src.Champions import Maokai # Importo al campeón Maokai de su propio archivo .py
-from src.Champions import Aatrox # Importo al campeón Aatrox de su propio archivo .py
+# Importo los campeones de su propio archivo .py
+from src.Champions import Karthus
+from src.Champions import Twitch 
+from src.Champions import Maokai 
+from src.Champions import Aatrox 
 from src.Item import Item # Importo la clase Item
-from src.Items import Guinsoo # Importo el item Guinsoo de su propio archivo .py
-from src.Items import Opportunity # Importo el item Opportunity de su propio archivo .py
-from src.Items import BlackfireTorch # Importo el item BlackfireTorch de su propio archivo .py
-from src.Items import Thornmain # Importo el item Thornmain de su propio archivo .py
-from src.Items import SpiritVisage # Importo el item SpiritVisage de su propio archivo .py
+# Importo los items de su propio archivo .py
+from src.Items import Guinsoo
+from src.Items import Opportunity
+from src.Items import BlackfireTorch
+from src.Items import Thornmail
+from src.Items import SpiritVisage
 
 
 class TestChampion(unittest.TestCase):
-
     def set_up(self): 
         Karthus.load_champion("Karthus") # Un mago
         Twitch.load_champion("Twitch")   # Un tirador
@@ -25,7 +26,7 @@ class TestChampion(unittest.TestCase):
         Guinsoo.load_item("Guinsoo")     # Un item con ad, ap y as
         Opportunity.load_item("Opportunity") # Un item con ad y penetracion plana de armadura
         BlackfireTorch.load_item("BlackfireTorch") # Un item con ap, mana y ah
-        Thornmain.load_item("Thornmain") # Un item de armadura
+        Thornmail.load_item("Thornmain") # Un item de armadura
         SpiritVisage.load_item("SpiritVisage") # Un item de resistencia magica
     
 

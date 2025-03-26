@@ -1,4 +1,4 @@
-from Item import Item
+from ..Item import Item
 
 class Guinsoo (Item):
     def __init__(self):

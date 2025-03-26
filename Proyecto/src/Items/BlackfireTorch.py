@@ -1,4 +1,4 @@
-from Item import Item
+from ..Item import Item
 
 class BlackfireTorch (Item):
     def __init__(self):
