@@ -9,7 +9,7 @@ CHAMPIONS_FOLDER = "Champions" # Carpeta que contiene a los campeones
 
 # Éstos dos métodos son para que el Main pueda cargar los campeones correctamente desde sus archivos .py
 
-    # Método para cargas los campeones
+"""Método para cargas los campeones"""
 def load_champion(champion_name: str):
     module_name = f"{CHAMPIONS_FOLDER}.{champion_name}"
     try:
@@ -19,7 +19,7 @@ def load_champion(champion_name: str):
     except (ModuleNotFoundError, AttributeError):
         raise ImportError(f"No se encontró el campeón {champion_name} en {module_name}")
 
-    # Método para listar los campeones
+"""Método para listar los campeones"""
 def list_champions():
     champions = []
     for filename in os.listdir(CHAMPIONS_FOLDER):
@@ -36,7 +36,7 @@ class Champion:
     its_alive: bool = True
 
 
-    # Valores base del campeón
+    """Valores base del campeón"""
     base_hp: float
     base_hp_g: float
     base_hp_regen: float
@@ -57,7 +57,7 @@ class Champion:
     base_move_speed: float
     baseAS: float
     
-    # Valores actuales que se actualizan con subidas de nivel o adquiriendo objetos
+    """Valores actuales que se actualizan con subidas de nivel o adquiriendo objetos"""
     actual_ap: float
     actual_healshield_power: float
     actual_tenacity: float
@@ -78,7 +78,7 @@ class Champion:
     actual_as_ratio: float
     actual_bonus_as_level: float
     actual_bonus_as_external: float
-    # Se calculan despues del constructor con 'def __post_init__()'
+    """Se calculan despues del constructor con 'def __post_init__()'"""
     actual_hp: float = field(init=False)
     actual_hp_regen: float = field(init=False)
     actual_mana: float = field(init=False)
@@ -90,7 +90,7 @@ class Champion:
     actual_move_speed: float = field(init=False)
     
 
-    # Constructor
+    """Constructor"""
     def __init__(self, name, title, level, base_hp, base_hp_g, base_hp_regen, base_hp_regen_g, base_mana, base_mana_g, base_mana_regen, base_mana_regen_g, base_energy, base_energy_g, base_ad, base_ad_g, base_armor, base_armor_g, base_mr, base_mr_g, base_range, base_move_speed, base_as, as_ratio, bonus_as):
         self.name = name
         self.title = title
@@ -118,7 +118,7 @@ class Champion:
         self.bonus_as = bonus_as
         self.__post_init__() # Post constructor
 
-    # Post Constructor
+    """Post Constructor"""
     def __post_init__(self):
         self.actual_hp = self.base_hp
         self.actual_hp_regen = self.base_hp_regen
@@ -148,13 +148,11 @@ class Champion:
         self.actual_bonus_as_level = 0.00000
         self.actual_bonus_as_external = 0.00000
         self.total_bonus_as = 0
-        # ¿self.actualGolgGeneration = 0? Idea
-        # Iniciación del inventario
-        self.items = [None] * 6
+        self.items = [None] * 6 # Iniciación del inventario
 
 
 
-    # Método para subir de nivel
+    """Método para subir de nivel"""
     def level_up(self):
         if self.level < 18:
             print("////////// LEVEL UP! \\\\\\\\\\")
@@ -166,21 +164,18 @@ class Champion:
             self.actual_ad = (self.base_ad + self.base_ad_g * (self.level - 1) * (0.7025 + 0.0175 * (self.level - 1)))
             self.actual_armor = (self.base_armor + self.base_armor_g * (self.level - 1) * (0.7025 + 0.0175 * (self.level - 1)))
             self.actual_mr = (self.base_mr + self.base_mr_g * (self.level - 1) * (0.7025 + 0.0175 * (self.level - 1)))
-            
-            # Actualización del crecimiento de la velocidad de ataque por nivel
+            """Actualización del crecimiento de la velocidad de ataque por nivel"""
             self.actual_bonus_as_level += self.as_ratio * self.bonus_as * (0.7025 + 0.0175 * (self.level - 1))
-            # Cálculo correcto de la velocidad de ataque con acumulación aditiva
+            """Cálculo de la velocidad de ataque con acumulación aditiva"""
             self.total_bonus_as = self.actual_bonus_as_level + self.actual_bonus_as_external
             self.actual_as = self.baseAS * (1 + self.total_bonus_as)
             
-            
-            #self.actualAttackSpeed = self.baseAttackSpeed + (self.actualBonusAttackSpeedExternal + self.actualBonusAttackSpeedLeveled * (self.level - 1) * (0.7025 + 0.0175 * (self.level - 1))) * self.actualAttackSpeedRatio
         else:
-            print("¡Ya has alcanzado el nivel máximo!")
+            print("Ya has alcanzado el nivel máximo")
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL SEGUIMIENTO DE LAS ESTADISTICAS =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    # Método para obtener información básica
+    """Método para obtener información básica"""
     def simple_stats(self):
         print("Campeón: ", self.name)
         print("Nivel: ", self.level)
@@ -198,7 +193,7 @@ class Champion:
         print("Chance de Critico: ", self.actual_crit_chance,"%")
         print("Velocidad de movimiento: ", self.actual_move_speed)
 
-    # Método para obtener información extra
+    """Método para obtener información extra"""
     def extended_stats(self):
         print("Poder de Curaciones y Escudos: ", self.actual_healshield_power,"%")
         print("Letalidad: ", self.actual_armorpen_flat)
@@ -210,6 +205,7 @@ class Champion:
         print("Rango de ataque: ", self.actual_range)
         print("Tenacidad: ", self.actual_tenacity,"%")
 
+    """Método para obtener informacion detallada de la velocidad de ataque"""
     def as_peed(self):
         print(f"Actual Attack Speed: {self.actual_as:.3f}")
         print(f"Base Attack Speed: {self.baseAS}")
@@ -221,7 +217,7 @@ class Champion:
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON LOS ITEMS =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    # Método para agregar un item al inventario
+    """Método para agregar un item al inventario"""
     def add_item(self, item):
         for i in range(len(self.items)):
             if self.items[i] is None:
@@ -232,7 +228,7 @@ class Champion:
         print("El inventario está lleno.")
 
     
-    # Método para eliminar un item del inventario
+    """Método para eliminar un item del inventario"""
     def remove_item(self, item):
         for i in range(len(self.items)):
             if self.items[i] == item:
@@ -243,7 +239,7 @@ class Champion:
         print("No se encontró el item.")
 
     
-    # Método para listar los items del inventario
+    """Método para listar los items del inventario"""
     def list_items(self):
         for i, item in enumerate(self.items):
             if item is not None:
@@ -251,7 +247,7 @@ class Champion:
             else:
                 print(f"[{self.name}] Espacio {i + 1}: Vacío")
 
-    # Método para actualizar las estadísticas del campeón
+    """Método para actualizar las estadísticas del campeón"""
     def update_stats(self, item, add=True):
         factor = 1 if add else -1
         self.actual_hp += item.hp * factor
@@ -280,7 +276,7 @@ class Champion:
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL COMBATE =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    # Método para inflingir daño
+    """Método para inflingir daño"""
     def realizar_daño(self, enemy):
         print("------------------------------------------------------------------------------------------------------")
         print(f"{self.name} ataca a {enemy.name}")
@@ -305,9 +301,8 @@ class Champion:
             elif(enemy.its_alive == True and self.its_alive != True): #Gana enemy
                 print(f"{self.name} fue derrotado por {enemy.name}") 
                 break
-
-    # self recibe daño de enemy
-    def recibir_daño(self, enemy):
+    
+    def recibir_daño(self, enemy): # self recibe daño de enemy
         daño_recibido = max(enemy.actual_ad - self.actual_armor, 0)
         """
         max(... , 0) hace que el resultado de la resta que tome daño_recibido sea el de mayor valor entre enemy.actual_ad y self.actual_armor,

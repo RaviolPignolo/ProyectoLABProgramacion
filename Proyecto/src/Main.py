@@ -29,4 +29,3 @@ Thornmail = load_item("Thornmail")
 SpiritVisage = load_item("SpiritVisage")
 BlackfireTorch = load_item("BlackfireTorch")
 
-# Hay que empezar a armar el planteo de los turnos

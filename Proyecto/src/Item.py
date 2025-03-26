@@ -5,7 +5,7 @@ ITEMS_FORLDER = "Items" # Carpeta que contiene los items
 
 # Éstos dos métodos son para que el Main pueda cargar los items correctamente desde sus archivos .py
 
-# Método para cargar los items
+"""Método para cargar los items"""
 def load_item(item_name: str):
     module_name = f"{ITEMS_FORLDER}.{item_name}"
     try:
@@ -15,7 +15,7 @@ def load_item(item_name: str):
     except (ModuleNotFoundError, AttributeError):
         raise ImportError(f"No se encontró el item {item_name} en {module_name}")
     
-# Método para listar los items
+"""Método para listar los items"""
 def list_items():
     items = []
     for filename in os.listdir(ITEMS_FORLDER):
@@ -29,7 +29,6 @@ class Item:
     cost: int
     sell: int
 
-    # Stats que pueden dar los items
     hp: int
     hp_regen: float #%
     mana: int
@@ -52,8 +51,7 @@ class Item:
     movespeed_flat: int
     movespeed_percent: float #%
 
-
-    # Constructor
+    """Constructor"""
     def __init__(self, name, cost, sell, hp, hp_regen, mana, mana_regen, ad, as_, ap, armor, mr, healshield_power, tenacity, crit_chance, crit_damage, armorpen_flat, armorpen_percent, magicpen_flat, magicpen_percent, lifesteal, ah, movespeed_flat, movespeed_percent):
         self.name = name
         self.cost = cost
@@ -80,14 +78,17 @@ class Item:
         self.movespeed_flat = movespeed_flat
         self.movespeed_percent = movespeed_percent
 
-    # Método para ver las estadisticas que da el item
+    """Método para ver las estadisticas que da el item"""
     def item_info(self):
         print("Nombre: ", self.name)
         print("Coste: ", self.cost, " Oro")
         print("Vendible por: ", self.sell, " Oro")
         
-        stats = {       # Creo un diccionario creando el nombre de la estadistica y asignandole un valor
-        #   stat_name: stat_value
+        stats = {
+        """
+        Creo un diccionario creando el nombre de la estadistica y asignandole un valor
+            stat_name: stat_value
+        """
             "Health": self.hp,
             "Health Regen(%)": (self.hp_regen * 100),
             "Mana": self.mana,
@@ -110,7 +111,7 @@ class Item:
             "Movement Speed": self.moveSpeedFlat,
             "Movement Speed(%)": (self.moveSpeed * 100)
         }
-        # Recorro el diccionario y muestro los valores mayores a 0 que tenga el item
+        """Recorro el diccionario y muestro los valores mayores a 0 que tenga el item"""
         for stat_name, stat_value in stats.items():
             if stat_value > 0:
                 print(f"{stat_name}: {stat_value}")
