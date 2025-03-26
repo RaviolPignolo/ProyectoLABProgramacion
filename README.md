@@ -6,9 +6,8 @@ Simula un 1v1 entre los 170 campeones de League of Legends actualizado hasta el 
 
 ## Installation
 
-. Clona el repositorio github
-. Instala las dependencias
-
+- Clona el repositorio github
+- Instala las dependencias con el comando:
 ```python
   pip install -r requirements.txt
 ```
@@ -50,6 +49,16 @@ En el archivo Main.py encontrarás algunos campeones e items ya creados.
       
 ```
 
+## Tests
+
+Para realizar los tests se debe ejecutar el siguiente comando
+
+- Situarse en la ubicación raíz del proyecto y escribir el comando:
+```python
+  python -m unittest discover -s test
+```
+
+
 ## Roadmap
 
 - Agregar todos los campeones (15/170)
@@ -70,15 +79,6 @@ En el archivo Main.py encontrarás algunos campeones e items ya creados.
 - Implementar entorno gráfico
 
 - Implementar una opción "ver detalles" para ver todos los números cuando se calculan los daños y defensas
-
-## Tests
-
-Para realizar los tests se debe ejecutar el siguiente comando
-
-```python
-  python -m unittest discover -s test
-```
-
 
 ## Authors
 
