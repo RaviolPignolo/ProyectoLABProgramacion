@@ -15,19 +15,20 @@ from src.Items import BlackfireTorch
 from src.Items import Thornmail
 from src.Items import SpiritVisage
 
+# python -m unittest discover -s tests
 
 class TestChampion(unittest.TestCase):
-    def set_up(self): 
-        Karthus.load_champion("Karthus") # Un mago
-        Twitch.load_champion("Twitch")   # Un tirador
-        Maokai.load_champion("Maokai")   # Un tanque
-        Aatrox.load_champion("Aatrox")   # Un luchador
+    def setUp(self): 
+        self.Karthus = load_champion("Karthus")
+        self.Twitch = load_champion("Twitch")
+        self.Maokai = load_champion("Maokai")
+        self.Aatrox = load_champion("Aatrox")
 
-        Guinsoo.load_item("Guinsoo")     # Un item con ad, ap y as
-        Opportunity.load_item("Opportunity") # Un item con ad y penetracion plana de armadura
-        BlackfireTorch.load_item("BlackfireTorch") # Un item con ap, mana y ah
-        Thornmail.load_item("Thornmain") # Un item de armadura
-        SpiritVisage.load_item("SpiritVisage") # Un item de resistencia magica
+        self.Guinsoo = load_item("Guinsoo")                # ad, ap y as
+        self.Opportunity = load_item("Opportunity")        # ad y penetracion plana de armadura
+        self.BlackfireTorch = load_item("BlackfireTorch")  # ap, mana y ah
+        self.Thornmail = load_item("Thornmail")            # armadura
+        self.SpiritVisage = load_item("SpiritVisage")      # resistencia magica
     
 
     def test_carga_instancia(self):
@@ -41,9 +42,9 @@ class TestChampion(unittest.TestCase):
     def test_level_up(self):
         """Verifica que al subir de nivel aumenten correctamente las estadisticas"""
         Karthus_hp_inicial = self.Karthus.actual_hp
-        Karthus_hp_regen_inicial = self.Karthus.hp_regen
+        Karthus_hp_regen_inicial = self.Karthus.actual_hp_regen
         Karthus_mana_inicial = self.Karthus.actual_mana
-        Karthus_mana_regen_inicial = self.Karthus.mana_regen
+        Karthus_mana_regen_inicial = self.Karthus.actual_mana_regen
         Karthus_ad_inicial = self.Karthus.actual_ad
         Karthus_as_inicial = self.Karthus.actual_as
         Karthus_armor_inicial = self.Karthus.actual_armor
@@ -52,9 +53,9 @@ class TestChampion(unittest.TestCase):
         self.Karthus.level_up()
 
         self.assertGreater(self.Karthus.actual_hp, Karthus_hp_inicial)
-        self.assertGreater(self.Karthus.hp_regen, Karthus_hp_regen_inicial)
+        self.assertGreater(self.Karthus.actual_hp_regen, Karthus_hp_regen_inicial)
         self.assertGreater(self.Karthus.actual_mana, Karthus_mana_inicial)
-        self.assertGreater(self.Karthus.mana_regen, Karthus_mana_regen_inicial)
+        self.assertGreater(self.Karthus.actual_mana_regen, Karthus_mana_regen_inicial)
         self.assertGreater(self.Karthus.actual_ad, Karthus_ad_inicial)
         self.assertGreater(self.Karthus.actual_as, Karthus_as_inicial)
         self.assertGreater(self.Karthus.actual_armor, Karthus_armor_inicial)
@@ -74,12 +75,12 @@ class TestChampion(unittest.TestCase):
         self.assertGreater(self.Karthus.actual_as, Karthus_as_inicial)
         #Stats de Opportunity (ad, armorpen_flat)
         Karthus_ad_inicial_2 = self.Karthus.actual_ad
-        Karthus_armorpen_flat_inicial = self.Karthus.armorpen_flat
+        Karthus_armorpen_flat_inicial = self.Karthus.actual_armorpen_flat
         
         self.Karthus.add_item(self.Opportunity)
 
         self.assertGreater(self.Karthus.actual_ad, Karthus_ad_inicial_2)
-        self.assertGreater(self.Karthus.armorpen_flat, Karthus_armorpen_flat_inicial)
+        self.assertGreater(self.Karthus.actual_armorpen_flat, Karthus_armorpen_flat_inicial)
         #Stats de BlackfireTorch (ap, mana, ah)
         Karthus_ap_inicial_2 = self.Karthus.actual_ap
         Karthus_mana_inicial = self.Karthus.actual_mana
@@ -90,25 +91,25 @@ class TestChampion(unittest.TestCase):
         self.assertGreater(self.Karthus.actual_ap, Karthus_ap_inicial_2)
         self.assertGreater(self.Karthus.actual_mana, Karthus_mana_inicial)
         self.assertGreater(self.Karthus.actual_ah, Karthus_ah_inicial)
-        #Stats de Thornmain (hp, armor)
+        #Stats de Thornmail (hp, armor)
         Karthus_hp_inicial = self.Karthus.actual_hp
         Karthus_armor_inicial = self.Karthus.actual_armor
 
-        self.Karthus.add_item(self.Thornmain)
+        self.Karthus.add_item(self.Thornmail)
 
         self.assertGreater(self.Karthus.actual_hp, Karthus_hp_inicial)
         self.assertGreater(self.Karthus.actual_armor, Karthus_armor_inicial)
         #Stats de SpiritVisage (ah, hp, hp_regen, mr)
         Karthus_ah_inicial_2 = self.Karthus.actual_ah
         Karthus_hp_inicial_2 = self.Karthus.actual_hp
-        Karthus_hp_regen_inicial = self.Karthus.hp_regen
+        Karthus_hp_regen_inicial = self.Karthus.actual_hp_regen
         Karthus_mr_inicial = self.Karthus.actual_mr
 
         self.Karthus.add_item(self.SpiritVisage)
 
         self.assertGreater(self.Karthus.actual_ah, Karthus_ah_inicial_2)
         self.assertGreater(self.Karthus.actual_hp, Karthus_hp_inicial_2)
-        self.assertGreater(self.Karthus.hp_regen, Karthus_hp_regen_inicial)
+        self.assertGreater(self.Karthus.actual_hp_regen, Karthus_hp_regen_inicial)
         self.assertGreater(self.Karthus.actual_mr, Karthus_mr_inicial)
 
     def test_remove_item(self):
@@ -117,7 +118,7 @@ class TestChampion(unittest.TestCase):
         self.Karthus.add_item(self.SpiritVisage)
 
         Karthus_hp_inicial = self.Karthus.actual_hp
-        Karthus_hp_regen_inicial = self.Karthus.hp_regen
+        Karthus_hp_regen_inicial = self.Karthus.actual_hp_regen
         Karthus_armor_inicial = self.Karthus.actual_armor
         Karthus_mr_inicial = self.Karthus.actual_mr
         Karthus_ah_inicial = self.Karthus.actual_ah
@@ -130,7 +131,7 @@ class TestChampion(unittest.TestCase):
         self.Karthus.remove_item(self.SpiritVisage)
 
         self.assertLess(self.Karthus.actual_hp, Karthus_hp_inicial)
-        self.assertLess(self.Karthus.hp_regen, Karthus_hp_regen_inicial)
+        self.assertLess(self.Karthus.actual_hp_regen, Karthus_hp_regen_inicial)
         self.assertLess(self.Karthus.actual_ah, Karthus_ah_inicial)
         self.assertLess(self.Karthus.actual_mr, Karthus_mr_inicial)
 
@@ -139,15 +140,15 @@ class TestChampion(unittest.TestCase):
         self.Karthus.add_item(self.Guinsoo)
         self.Karthus.add_item(self.Opportunity)
         self.Karthus.add_item(self.BlackfireTorch)
-        self.Karthus.add_item(self.Thornmain)
+        self.Karthus.add_item(self.Thornmail)
         self.Karthus.add_item(self.SpiritVisage)
         self.Karthus.add_item(self.BlackfireTorch) # último slot de inventario
         self.Karthus.add_item(self.BlackfireTorch) # no se debería agregar
         self.Karthus.add_item(self.BlackfireTorch) # no se debería agregar
 
-        self.assertEqual(self.Karthus.list_items(), ["Guinsoo", "Opportunity", "BlackfireTorch", "Thornmain", "SpiritVisage", "BlackfireTorch"])
+        self.assertEqual(self.Karthus.list_items(), ["Guinsoo", "Opportunity", "BlackfireTorch", "Thornmail", "SpiritVisage", "BlackfireTorch"])
 
-    def test_realizar_daño_sinitems(self, enemy):
+    def test_realizar_daño_sinitems(self):
         """Verficamos que los campeones se ataquen correctamente"""
         Twitch_hp_inicial = self.Twitch.actual_hp
         Aatrox_hp_inicial = self.Aatrox.actual_hp
@@ -178,13 +179,13 @@ class TestChampion(unittest.TestCase):
             self.assertEqual(self.Twitch.actual_hp, 0)
         
 
-    def test_realizar_daño_conitems(self, enemy):
+    def test_realizar_daño_conitems(self):
         """Verficamos que los campeones se ataquen correctamente con items"""
         Twitch_hp_inicial = self.Twitch.actual_hp
         Maokai_hp_inicial = self.Maokai.actual_hp
 
-        self.Twitch.add_item(self.Oppotunity)
-        self.Maokai.add_item(self.Thornmain)
+        self.Twitch.add_item(self.Opportunity)
+        self.Maokai.add_item(self.Thornmail)
 
         self.Twitch.realizar_daño(self.Maokai)
 
@@ -218,3 +219,27 @@ class TestChampion(unittest.TestCase):
         self.Aatrox.realizar_daño(self.Maokai)
         self.assertFalse(self.Maokai.its_alive)
         self.assertEqual(self.Maokai.actual_hp, 0)
+        
+    
+    def test_armor(self):
+        """Verifica que la armadura base, bonus y total se calculen correctamente"""
+        print("Armadura base: ", self.Karthus.base_armor)
+        print("Armadura actual: ", self.Karthus.actual_armor)
+        print("Armadura bonus: ", self.Karthus.actual_bonus_armor)
+        print("Armadura total: ", self.Karthus.actual_total_armor)
+        
+        Karthus_base_armor_inicial = self.Karthus.base_armor
+        Karthus_actual_armor_inicial = self.Karthus.actual_armor
+        Karthus_actual_bonus_armor_inicial = self.Karthus.actual_bonus_armor
+        Karthus_actual_total_armor_inicial = self.Karthus.actual_total_armor
+        
+        self.Karthus.simple_stats()
+        
+        self.Karthus.add_item(self.Thornmail)
+        print("Armadura base: ", self.Karthus.base_armor)
+        print("Armadura actual: ", self.Karthus.actual_armor)
+        print("Armadura bonus: ", self.Karthus.actual_bonus_armor)
+        print("Armadura total: ", self.Karthus.actual_total_armor)
+        
+        self.assertGreater(self.Karthus.actual_total_armor, Karthus_actual_total_armor_inicial)
+        

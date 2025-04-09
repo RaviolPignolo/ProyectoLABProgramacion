@@ -28,3 +28,5 @@ class Karthus(Champion):
             as_ratio = 0.625,
             bonus_as = 0.0211,
         )
+        
+super().q():

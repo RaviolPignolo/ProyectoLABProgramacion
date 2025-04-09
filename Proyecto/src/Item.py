@@ -1,7 +1,7 @@
 import importlib
 import os
 
-ITEMS_FORLDER = "Items" # Carpeta que contiene los items
+ITEMS_FORLDER = "src.Items" # Carpeta que contiene los items
 
 # Éstos dos métodos son para que el Main pueda cargar los items correctamente desde sus archivos .py
 

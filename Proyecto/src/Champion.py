@@ -4,7 +4,7 @@ import math
 from dataclasses import dataclass, field
 from .Item import Item
 
-CHAMPIONS_FOLDER = "Champions" # Carpeta que contiene a los campeones
+CHAMPIONS_FOLDER = "src.Champions" # Carpeta que contiene a los campeones
 
 
 # Éstos dos métodos son para que el Main pueda cargar los campeones correctamente desde sus archivos .py
@@ -64,8 +64,12 @@ class Champion:
     actual_slow_resist: float
     actual_crit_chance: float
     actual_crit_damage: float
+    actual_bonus_armor: float # armadura obtenida de fuentes que no sean subir de nivel
+    actual_total_armor: float # actual_armor + actual_bonus_armor
     actual_armorpen_flat: float
     actual_armorpen_percent: float
+    actual_bonus_mr: float # mr obtenido de fuentes que no sean subir de nivel
+    actual_total_mr: float # actual_mr + actual_bonus_mr
     actual_magicpen_flat: float
     actual_magicpen_percent: float
     actual_lifesteal: float
@@ -135,8 +139,12 @@ class Champion:
         self.actual_ap = 0
         self.actual_crit_chance = 0
         self.actual_crit_damage = 0
+        self.actual_bonus_armor = 0 
+        self.actual_total_armor = 0
         self.actual_armorpen_flat = 0
         self.actual_armorpen_percent = 0
+        self.actual_bonus_mr = 0
+        self.actual_total_mr = 0
         self.actual_magicpen_flat = 0
         self.actual_magicpen_percent = 0
         self.actual_lifesteal = 0
@@ -150,7 +158,14 @@ class Champion:
         self.total_bonus_as = 0
         self.items = [None] * 6 # Iniciación del inventario
 
-
+        """
+        El valor de actual_total_armor con Karthus deberia ser 21( 21 de base + 0 de bonus)
+        pero al mostrarlo teniendo el campeon a nivel 1 y sin darle items va a mostrar 0 porque no se lo actualizó
+        Idea de solución: llamar a la actualización de sats justo despues de llamar a la funcion que te da los stats
+        def lista_stats
+            llamar actualizar stats
+            muestra stats y eso
+        """
 
     """Método para subir de nivel"""
     def level_up(self):
@@ -186,7 +201,7 @@ class Champion:
         print("AD: ", self.actual_ad)
         print("AS: ", self.actual_as, "%")
         print("AP: ", self.actual_ap)
-        print("Armadura: ", self.actual_armor)
+        print("Armadura: ", self.actual_total_armor)
         print("Resistencia Mágica: ", self.actual_mr)
         #velocidad de ataque tehe
         print("Ability Haste: ", self.actual_ah)
@@ -241,11 +256,11 @@ class Champion:
     
     """Método para listar los items del inventario"""
     def list_items(self):
+        item_list = []
         for i, item in enumerate(self.items):
             if item is not None:
-                print(f"[{self.name}] Espacio {i + 1}: {item.name}")
-            else:
-                print(f"[{self.name}] Espacio {i + 1}: Vacío")
+                item_list.append(item.name)
+        return item_list
 
     """Método para actualizar las estadísticas del campeón"""
     def update_stats(self, item, add=True):
@@ -256,7 +271,7 @@ class Champion:
         self.actual_mana_regen += item.mana_regen * factor
         self.actual_ad += item.ad * factor
         self.actual_ap += item.ap * factor
-        self.actual_armor += item.armor * factor
+        self.actual_bonus_armor += item.armor * factor
         self.actual_mr += item.mr * factor
         self.actual_healshield_power += item.healshield_power * factor
         self.actual_tenacity += item.tenacity * factor
@@ -273,6 +288,7 @@ class Champion:
         self.actual_bonus_as_external += item.as_ * factor
         self.total_bonus_as = self.actual_bonus_as_level + self.actual_bonus_as_external
         self.actual_as = self.baseAS * (1 + self.total_bonus_as)
+        self.actual_total_armor = self.actual_armor + self.actual_bonus_armor
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL COMBATE =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -302,21 +318,43 @@ class Champion:
                 print(f"{self.name} fue derrotado por {enemy.name}") 
                 break
     
+    # https://www.youtube.com/watch?v=zrFb18aIjyg -> Video expliacndo la armadura y resistencia mágica
     def recibir_daño(self, enemy): # self recibe daño de enemy
-        daño_recibido = max(enemy.actual_ad - self.actual_armor, 0)
-        """
-        max(... , 0) hace que el resultado de la resta que tome daño_recibido sea el de mayor valor entre enemy.actual_ad y self.actual_armor,
-        haciendo que en caso de:
-            enemy.actual_ad > self.actual_armor  -> logicamente el daño restante se aplicara a la vida
-
-            enemy.actual_ad < self.actual_armor  -> el daño sería negativo, entra en funcionamiento max(..., 0) y le da a daño_recibido el valor 0
-        """
-
+        
+        if(self.actual_armor >= 0): # Situación común
+            daño_recibido = (enemy.actual_ad / (1 + self.actual_armor / 100)) 
+        else: # La armadura se redujo a valores de 0 o menos
+            daño_recibido = (enemy.actual_ad * (2 - (100 / (100 - self.actual_armor))))
+            
+        daño_recibido = max(daño_recibido, 0) # Evita que el valor del daño recibido sea negativo
         self.actual_hp -= daño_recibido
-        self.actual_hp = max(self.actual_hp, 0) # Para que la vida no sea negativa
-        print(f"Daño realizado por {enemy.name} hacia {self.name}: {daño_recibido}")
-        print(f"Salud de {self.name} actualizado a: {self.actual_hp}")
+        self.actual_hp = max(self.actual_hp, 0) # Evita que el valor de la vida sea negativo
+            
+        print(f"Daño realizado por {enemy.name} hacia {self.name}: {daño_recibido:.2f}")
+        print(f"Salud de {self.name} actualizado a: {self.actual_hp:.2f}")
 
-        if (self.actual_hp <= 0): # Despues de cada golpe revisa si alguno de los dos murio, si ocurre se termina el while() y se da un ganador
+        if (self.actual_hp <= 0): # Despues de cada golpe revisa si alguno de los dos murio, si ocurre se termina el while() y se da un resultado
             self.its_alive = False
+    
+    """
+    Redefinir los metodos de realizar daño y recibir daño para que reciban el tipo de daño que se aplica;
+    recibir daño deberia cambiar a hacer daño o algo así;
+    hacer los super de la pasiva, q, w, e ,r;
+    """
+    
+    def pasiva(self):
+        print(f"{self.name} la pasiva hace efecto")        
+            
+    def q(self):
+        print(f"{self.name} usa Q")
+        
+    def w(self):
+        print(f"{self.name} usa W")
+        
+    def e(self):
+        print(f"{self.name} usa E")
+        
+    def r(self):
+        print(f"{self.name} usa R")    
+    
 
