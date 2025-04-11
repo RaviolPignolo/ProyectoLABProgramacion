@@ -1,7 +1,7 @@
-from Champion import Champion
-from Item import Item
-from Champion import load_champion
-from Item import load_item
+from .Champion import Champion
+from .Item import Item
+from .Champion import load_champion
+from .Item import load_item
 
 # Campeones
 Aatrox = load_champion("Aatrox")
@@ -29,7 +29,5 @@ Thornmail = load_item("Thornmail")
 SpiritVisage = load_item("SpiritVisage")
 BlackfireTorch = load_item("BlackfireTorch")
 
-print("Armadura base: ", Karthus.base_armor)
-print("Armadura bonus: ", Karthus.bonus_armor)
-print("Armadura total: ", Karthus.total_armor)
+Karthus.q()
 

@@ -29,4 +29,5 @@ class Karthus(Champion):
             bonus_as = 0.0211,
         )
         
-super().q():
+    def q():
+        super().q()
