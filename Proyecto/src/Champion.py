@@ -1,10 +1,10 @@
 import importlib
 import os
 import math
-from dataclasses import dataclass, field
+from dataclasses import field
 from .Item import Item
 
-CHAMPIONS_FOLDER = "src.Champions" # Carpeta que contiene a los campeones
+CHAMPIONS_FOLDER = "Proyecto.src.Champions" # Carpeta que contiene a los campeones
 
 
 # Éstos dos métodos son para que el Main pueda cargar los campeones correctamente desde sus archivos .py
@@ -140,11 +140,11 @@ class Champion:
         self.actual_crit_chance = 0
         self.actual_crit_damage = 0
         self.actual_bonus_armor = 0 
-        self.actual_total_armor = 0
+        self.actual_total_armor = self.actual_armor + self.actual_bonus_armor
         self.actual_armorpen_flat = 0
         self.actual_armorpen_percent = 0
         self.actual_bonus_mr = 0
-        self.actual_total_mr = 0
+        self.actual_total_mr = self.actual_mr + self.actual_bonus_mr
         self.actual_magicpen_flat = 0
         self.actual_magicpen_percent = 0
         self.actual_lifesteal = 0
@@ -178,7 +178,9 @@ class Champion:
             self.actual_mana_regen = (self.base_mana_regen + self.base_mana_regen_g * (self.level - 1) * (0.7025 + 0.0175 * (self.level - 1)))
             self.actual_ad = (self.base_ad + self.base_ad_g * (self.level - 1) * (0.7025 + 0.0175 * (self.level - 1)))
             self.actual_armor = (self.base_armor + self.base_armor_g * (self.level - 1) * (0.7025 + 0.0175 * (self.level - 1)))
+            self.actual_total_armor = self.actual_armor + self.actual_bonus_armor
             self.actual_mr = (self.base_mr + self.base_mr_g * (self.level - 1) * (0.7025 + 0.0175 * (self.level - 1)))
+            self.actual_total_mr = self.actual_mr + self.actual_bonus_mr
             """Actualización del crecimiento de la velocidad de ataque por nivel"""
             self.actual_bonus_as_level += self.as_ratio * self.bonus_as * (0.7025 + 0.0175 * (self.level - 1))
             """Cálculo de la velocidad de ataque con acumulación aditiva"""
@@ -202,7 +204,7 @@ class Champion:
         print("AS: ", self.actual_as, "%")
         print("AP: ", self.actual_ap)
         print("Armadura: ", self.actual_total_armor)
-        print("Resistencia Mágica: ", self.actual_mr)
+        print("Resistencia Mágica: ", self.actual_total_mr)
         #velocidad de ataque tehe
         print("Ability Haste: ", self.actual_ah)
         print("Chance de Critico: ", self.actual_crit_chance,"%")
@@ -262,7 +264,7 @@ class Champion:
                 item_list.append(item.name)
         return item_list
 
-    """Método para actualizar las estadísticas del campeón"""
+    """Método para actualizar las estadísticas del campeón despues de agregar o eliminar un item"""
     def update_stats(self, item, add=True):
         factor = 1 if add else -1
         self.actual_hp += item.hp * factor
@@ -272,7 +274,9 @@ class Champion:
         self.actual_ad += item.ad * factor
         self.actual_ap += item.ap * factor
         self.actual_bonus_armor += item.armor * factor
-        self.actual_mr += item.mr * factor
+        self.actual_total_armor = self.actual_armor + self.actual_bonus_armor
+        self.actual_bonus_mr += item.mr * factor
+        self.actual_total_mr = self.actual_mr + self.actual_bonus_mr
         self.actual_healshield_power += item.healshield_power * factor
         self.actual_tenacity += item.tenacity * factor
         self.actual_crit_chance += item.crit_chance * factor
@@ -288,7 +292,7 @@ class Champion:
         self.actual_bonus_as_external += item.as_ * factor
         self.total_bonus_as = self.actual_bonus_as_level + self.actual_bonus_as_external
         self.actual_as = self.baseAS * (1 + self.total_bonus_as)
-        self.actual_total_armor = self.actual_armor + self.actual_bonus_armor
+        
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL COMBATE =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -343,7 +347,7 @@ class Champion:
     """
     
     def pasiva(self):
-        print(f"{self.name} la pasiva hace efecto")        
+        print(f"La pasiva de {self.name} hace efecto")        
             
     def q(self):
         print(f"{self.name} usa Q")
@@ -358,3 +362,173 @@ class Champion:
         print(f"{self.name} usa R")    
     
 
+
+    #Getters
+    @property
+    def get_name(self):
+        return self.name
+    @property
+    def get_title(self):
+        return self.title
+    @property
+    def get_level(self):
+        return self.level
+    @property
+    def get_its_alive(self):
+        return self.its_alive
+    @property
+    def get_base_hp(self):
+        return self.base_hp
+    @property
+    def get_base_hp_g(self):
+        return self.base_hp_g
+    @property
+    def get_base_hp_regen(self):
+        return self.base_hp_regen
+    @property
+    def get_base_hp_regen_g(self):
+        return self.base_hp_regen_g
+    @property
+    def get_base_mana(self):
+        return self.base_mana
+    @property
+    def get_base_mana_g(self):
+        return self.base_mana_g
+    @property
+    def get_base_mana_regen(self):
+        return self.base_mana_regen
+    @property
+    def get_base_mana_regen_g(self):
+        return self.base_mana_regen_g
+    @property
+    def get_base_energy(self):
+        return self.base_energy
+    @property
+    def get_base_energy_regen(self):
+        return self.base_energy_regen
+    @property
+    def get_base_ad(self):
+        return self.base_ad
+    @property
+    def get_base_ad_g(self):
+        return self.base_ad_g
+    @property
+    def get_base_armor(self):
+        return self.base_armor
+    @property
+    def get_base_armor_g(self):
+        return self.base_armor_g
+    @property
+    def get_base_mr(self):
+        return self.base_mr
+    @property
+    def get_base_mr_g(self):
+        return self.base_mr_g
+    @property
+    def get_base_range(self):
+        return self.base_range
+    @property
+    def get_base_move_speed(self):
+        return self.base_move_speed
+    @property
+    def get_baseAS(self):
+        return self.baseAS
+    @property
+    def get_actual_ap(self):
+        return self.actual_ap
+    @property
+    def get_actual_healshield_power(self):
+        return self.actual_healshield_power
+    @property
+    def get_actual_tenacity(self):
+        return self.actual_tenacity
+    @property
+    def get_actual_slow_resist(self):
+        return self.actual_slow_resist
+    @property
+    def get_actual_crit_chance(self):
+        return self.actual_crit_chance
+    @property
+    def get_actual_crit_damage(self):
+        return self.actual_crit_damage
+    @property
+    def get_actual_bonus_armor(self):
+        return self.actual_bonus_armor
+    @property
+    def get_actual_total_armor(self):
+        return self.actual_total_armor
+    @property
+    def get_actual_armorpen_flat(self):
+        return self.actual_armorpen_flat
+    @property
+    def get_actual_armorpen_percent(self):
+        return self.actual_armorpen_percent
+    @property
+    def get_actual_bonus_mr(self):
+        return self.actual_bonus_mr
+    @property
+    def get_actual_total_mr(self):
+        return self.actual_total_mr
+    @property
+    def get_actual_magicpen_flat(self):
+        return self.actual_magicpen_flat
+    @property
+    def get_actual_magicpen_percent(self):
+        return self.actual_magicpen_percent
+    @property
+    def get_actual_lifesteal(self):
+        return self.actual_lifesteal
+    @property
+    def get_actual_physicvamp(self):
+        return self.actual_physicvamp
+    @property
+    def get_actual_omnivamp(self):
+        return self.actual_omnivamp
+    @property
+    def get_actual_ah(self):
+        return self.actual_ah
+    @property
+    def get_as_ratio(self):
+        return self.as_ratio
+    @property
+    def get_bonus_as(self):
+        return self.bonus_as
+    @property
+    def get_actual_as(self):
+        return self.actual_as
+    @property
+    def get_actual_as_ratio(self):
+        return self.actual_as_ratio
+    @property
+    def get_actual_bonus_as_level(self):
+        return self.actual_bonus_as_level
+    @property
+    def get_actual_bonus_as_external(self):
+        return self.actual_bonus_as_external
+    @property
+    def get_actual_hp(self):
+        return self.actual_hp
+    @property
+    def get_actual_hp_regen(self):
+        return self.actual_hp_regen
+    @property
+    def get_actual_mana(self):
+        return self.actual_mana
+    @property
+    def get_actual_mana_regen(self):
+        return self.actual_mana_regen
+    @property
+    def get_actual_ad(self):
+        return self.actual_ad
+    @property
+    def get_actual_armor(self):
+        return self.actual_armor
+    @property
+    def get_actual_mr(self):
+        return self.actual_mr
+    @property
+    def get_actual_range(self):
+        return self.actual_range
+    @property
+    def get_actual_move_speed(self):
+        return self.actual_move_speed

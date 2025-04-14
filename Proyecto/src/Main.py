@@ -29,5 +29,4 @@ Thornmail = load_item("Thornmail")
 SpiritVisage = load_item("SpiritVisage")
 BlackfireTorch = load_item("BlackfireTorch")
 
-Karthus.q()
-
+#Espacio para hacer testeos boludos uwu

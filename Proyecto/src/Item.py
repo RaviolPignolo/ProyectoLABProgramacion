@@ -1,13 +1,13 @@
 import importlib
 import os
 
-ITEMS_FORLDER = "src.Items" # Carpeta que contiene los items
+ITEM_FOLDER = "Proyecto.src.Items" # Carpeta que contiene los items
 
 # Éstos dos métodos son para que el Main pueda cargar los items correctamente desde sus archivos .py
 
 """Método para cargar los items"""
 def load_item(item_name: str):
-    module_name = f"{ITEMS_FORLDER}.{item_name}"
+    module_name = f"{ITEM_FOLDER}.{item_name}"
     try:
         module = importlib.import_module(module_name)
         item_class = getattr(module, item_name)
@@ -18,7 +18,7 @@ def load_item(item_name: str):
 """Método para listar los items"""
 def list_items():
     items = []
-    for filename in os.listdir(ITEMS_FORLDER):
+    for filename in os.listdir(ITEM_FOLDER):
         if filename.endswith(".py") and filename != "__init__.py":
             items.append(filename[:-3])
     return items
