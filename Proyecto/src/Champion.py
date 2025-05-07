@@ -34,7 +34,11 @@ class Champion:
     title: str
     level: int
     its_alive: bool = True
-
+    
+    q_level: int
+    w_level: int
+    e_level: int
+    r_level: int
 
     """Valores base del campeón"""
     base_hp: float
@@ -157,15 +161,9 @@ class Champion:
         self.actual_bonus_as_external = 0.00000
         self.total_bonus_as = 0
         self.items = [None] * 6 # Iniciación del inventario
+        self.effects = [None] * 10 # Iniciación del espacio para efectos
 
-        """
-        El valor de actual_total_armor con Karthus deberia ser 21( 21 de base + 0 de bonus)
-        pero al mostrarlo teniendo el campeon a nivel 1 y sin darle items va a mostrar 0 porque no se lo actualizó
-        Idea de solución: llamar a la actualización de sats justo despues de llamar a la funcion que te da los stats
-        def lista_stats
-            llamar actualizar stats
-            muestra stats y eso
-        """
+
 
     """Método para subir de nivel"""
     def level_up(self):
@@ -186,9 +184,40 @@ class Champion:
             """Cálculo de la velocidad de ataque con acumulación aditiva"""
             self.total_bonus_as = self.actual_bonus_as_level + self.actual_bonus_as_external
             self.actual_as = self.baseAS * (1 + self.total_bonus_as)
-            
         else:
             print("Ya has alcanzado el nivel máximo")
+            
+            
+    """Método para subir de nivel las habilidades"""
+    def level_up_hability(self, hability):
+        if(hability == "Q"):
+            if(self.q_level == 5):
+                print("No se puede subir de nivel la habilidad")
+            else:
+                self.q_level = self.q_level + 1
+                print(f"La habilidad Q de {self.name} subió a nivel {self.q_level}")
+                
+        if(hability == "W"):
+            if(self.w_level == 5):
+                print("No se puede subir de nivel la habilidad")
+            else:
+                self.w_level = self.w_level + 1
+                print(f"La habilidad W de {self.name} subió a nivel {self.e_level}")
+                
+        if(hability == "E"):
+            if(self.e_level == 5):
+                print("No se puede subir de nivel la habilidad")
+            else:
+                self.e_level = self.e_level + 1
+                print(f"La habilidad E de {self.name} subió a nivel {self.w_level}")
+                
+        if(hability == "R"):
+            if(self.r_level == 3):
+                print("No se puede subir de nivel la habilidad")
+            else:
+                self.r_level = self.r_level + 1
+                print(f"La habilidad R de {self.name} subió a nivel {self.r_level}")
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL SEGUIMIENTO DE LAS ESTADISTICAS =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -292,11 +321,111 @@ class Champion:
         self.actual_bonus_as_external += item.as_ * factor
         self.total_bonus_as = self.actual_bonus_as_level + self.actual_bonus_as_external
         self.actual_as = self.baseAS * (1 + self.total_bonus_as)
-        
+
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON LOS EFECTOS =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    """Método para agregar un efecto"""
+    def add_item(self, item):
+        for i in range(len(self.items)):
+            if self.items[i] is None:
+                self.items[i] = item
+                self.update_stats(item, add=True)
+                print(f"[{self.name}] Item: {item.name} añadido al espacio {i + 1}.")
+                return
+        print("El inventario está lleno.")
+
+    
+    """Método para eliminar un efecto"""
+    def remove_item(self, item):
+        for i in range(len(self.items)):
+            if self.items[i] == item:
+                self.items[i] = None
+                self.update_stats(item, add=False)
+                print(f"[{self.name}] Item: {item.name} eliminado del espacio {i + 1}.")
+                return
+        print("No se encontró el item.")
+
+    
+    """Método para listar los efectos"""
+    def list_items(self):
+        item_list = []
+        for i, item in enumerate(self.items):
+            if item is not None:
+                item_list.append(item.name)
+        return item_list
+
+
+
+
+
+
+
+
+
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL COMBATE =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    """Método para inflingir daño"""
+    """ Método para el sistema de ataque"""
+    def sistema_pelea(self, Champion):
+        turno: int
+        tiempo: int
+        
+        while(self.its_alive and Champion.its_alive == True):
+            print("--------------------------------------")
+            print(f"----| {self.name} |------------------")
+            print(f"----| HP: {self.actual_hp} |-----------")
+            print(f"----| MP: {self.actual_mana} |---------")
+            print("--------------------------------------")
+            print(f"----| {Champion.name} |------------------")
+            print(f"----| HP: {Champion.actual_hp} |-----------")
+            print(f"----| MP: {Champion.actual_mana} |---------")
+            print("--------------------------------------")
+            print("----| Turno de: xxxxxx |--------------")
+            print("----| Habilidades: |---------------")
+            print("----| 1) Q  |---| 1) W  |---| 1) E  |---| 1) R  |")
+            print("----| Comandos: |-----------------------")
+            print("----| '/help' |---| '/items' |---| '/efectos' |----")
+            print("----| '/detalles_habilidades' |---| '/detalles_campeon|----")
+            print("-------------------------------------------------")
+            """
+            Acá el programa tiene que escuchar lo que escribe el usuario:
+            si es 1 ejecuta la Q del campeón que tiene el turno
+            si es 2 ejecuta la W del campeón que tiene el turno
+            si es 3 ejecuta la E del campeón que tiene el turno
+            si es 4 ejecuta la R del campeón que tiene el turno
+            si es /help describe que hacen los comandos
+            si es /items se muestran los items que tienen ambos campeónes, mas adelante se muestra cómo deberia verse
+            si es /efectos se muestran los efectos que sufren los campeónes, mas adelante se muestra cómo deberia verse
+            si es /detalles_habilidades se describen las haibilidades de los campeónes y el resultado actualizado de los cálculos que tengan
+            si es /detalles_campeon se muestran las estadisticas de los campeones usando los metodos simple_stats() y extended_stats()
+            """
+            #pantalla que se muestra al usar /items
+            print("--------------------------")
+            print(f"----| {self.list_items} |----")
+            print(f"----| {Champion.list_items} |----")
+            print("--------------------------")
+            
+            #pantalla que se muestra al usar /efectos
+            print("--------------------------")
+            print(f"----| {self.name} |-----")
+            print(f"--")
+            
+            
+            print(f"----| {Champion.name} |----")
+            
+            
+            #pantalla que se muestra al usar /detalles_habilidades
+            
+            
+            #pantalla que se muestra al usar /detalles_campeon
+
+
+
+
+    """--Método para inflingir daño--"""
+    """Método donde 2 campeones se pelearán a muerte a base de Auto Ataques"""
     def realizar_daño(self, enemy):
         print("------------------------------------------------------------------------------------------------------")
         print(f"{self.name} ataca a {enemy.name}")
@@ -309,8 +438,8 @@ class Champion:
         print("------------------------------------------------------------------------------------------------------")
         
         while(self.its_alive and enemy.its_alive == True): # Mientras uno de los dos siga vivo se van a seguir peleando
-            enemy.recibir_daño(self)
-            self.recibir_daño(enemy)
+            enemy.aa(self)
+            self.aa(enemy)
 
             if(enemy.its_alive != True and self.its_alive != True): #Ambos mueren
                 print(f"{self.name} y {enemy.name} murieron")
@@ -323,28 +452,55 @@ class Champion:
                 break
     
     # https://www.youtube.com/watch?v=zrFb18aIjyg -> Video expliacndo la armadura y resistencia mágica
-    def recibir_daño(self, enemy): # self recibe daño de enemy
-        
-        if(self.actual_armor >= 0): # Situación común
-            daño_recibido = (enemy.actual_ad / (1 + self.actual_armor / 100)) 
-        else: # La armadura se redujo a valores de 0 o menos
-            daño_recibido = (enemy.actual_ad * (2 - (100 / (100 - self.actual_armor))))
-            
-        daño_recibido = max(daño_recibido, 0) # Evita que el valor del daño recibido sea negativo
-        self.actual_hp -= daño_recibido
-        self.actual_hp = max(self.actual_hp, 0) # Evita que el valor de la vida sea negativo
-            
-        print(f"Daño realizado por {enemy.name} hacia {self.name}: {daño_recibido:.2f}")
-        print(f"Salud de {self.name} actualizado a: {self.actual_hp:.2f}")
-
-        if (self.actual_hp <= 0): # Despues de cada golpe revisa si alguno de los dos murio, si ocurre se termina el while() y se da un resultado
-            self.its_alive = False
     
-    """
-    Redefinir los metodos de realizar daño y recibir daño para que reciban el tipo de daño que se aplica;
-    recibir daño deberia cambiar a hacer daño o algo así;
-    hacer los super de la pasiva, q, w, e ,r;
-    """
+    """Método para calcular el daño de los AA"""
+    def aa(self, enemy): #self recibe daño de enemy
+        #daño_total = 0
+        
+        if(self.actual_total_armor > 0):
+            daño_total = (enemy.actual_ad / (1 + self.actual_total_armor / 100))
+        else:
+            daño_total = (enemy.actual_ad * (2 - (100 / (100 - self.actual_total_armor))))     
+        
+        daño_total = max(daño_total, 0) # Evita que el valor del daño sea negativo
+        self.actual_hp -= daño_total
+        self.actual_hp = max(self.actual_hp, 0) #Evita que el valor de la vida sea negativo
+        
+        print(f"{self.name} recibió {daño_total: .2f} de daño.")
+        print(f"Salud de {self.name} actualizado a: {self.actual_hp: .2f}")
+
+
+        # Cambiar de lugat el if() para que sea parte del método realizar_daño() y poder usar el método aa() como parte del kit de habilidades de los campeones
+        if(self.actual_hp <= 0): # Despues de cada golpe revisa si alguno de los dos murio, si ocurre se termina el while() y se da un resultado
+            self.its_alive = False        
+    
+            
+    """Método para calcular daño dependiento el tipo"""
+    def hacer_daño(self, cantidad, tipo, Champion):
+        daño_total = 0
+        
+        if(tipo == "TRUE"):
+            daño_total = cantidad
+        elif(tipo == "AP"):
+            if(Champion.actual_total_mr > 0):
+                daño_total = (cantidad / (1 + Champion.actual_total_mr / 100))
+            else:
+                daño_total = (cantidad * (2 - (100 / (100 - Champion.actual_total_mr))))
+        elif(tipo == "AD"):
+            if(Champion.actual_total_armor > 0):
+                daño_total = (cantidad / (1 + Champion.actual_total_armor / 100))
+            else:
+                daño_total = (cantidad * (2 - (100 / (100 - Champion.actual_total_armor))))
+        else:
+            print("No se reconoce el tipo de daño recibido")
+        
+        daño_total = max(daño_total, 0)
+        Champion.actual_hp -= daño_total
+        Champion.actual_hp = max(Champion.actual_hp, 0)
+        
+        print(f"{Champion.name} recibió {daño_total: .2f} de daño {tipo}.")
+        print(f"Salud de {Champion.name} actualizado a: {Champion.actual_hp: .2f}.")            
+            
     
     def pasiva(self):
         print(f"La pasiva de {self.name} hace efecto")        
@@ -361,174 +517,3 @@ class Champion:
     def r(self):
         print(f"{self.name} usa R")    
     
-
-
-    #Getters
-    @property
-    def get_name(self):
-        return self.name
-    @property
-    def get_title(self):
-        return self.title
-    @property
-    def get_level(self):
-        return self.level
-    @property
-    def get_its_alive(self):
-        return self.its_alive
-    @property
-    def get_base_hp(self):
-        return self.base_hp
-    @property
-    def get_base_hp_g(self):
-        return self.base_hp_g
-    @property
-    def get_base_hp_regen(self):
-        return self.base_hp_regen
-    @property
-    def get_base_hp_regen_g(self):
-        return self.base_hp_regen_g
-    @property
-    def get_base_mana(self):
-        return self.base_mana
-    @property
-    def get_base_mana_g(self):
-        return self.base_mana_g
-    @property
-    def get_base_mana_regen(self):
-        return self.base_mana_regen
-    @property
-    def get_base_mana_regen_g(self):
-        return self.base_mana_regen_g
-    @property
-    def get_base_energy(self):
-        return self.base_energy
-    @property
-    def get_base_energy_regen(self):
-        return self.base_energy_regen
-    @property
-    def get_base_ad(self):
-        return self.base_ad
-    @property
-    def get_base_ad_g(self):
-        return self.base_ad_g
-    @property
-    def get_base_armor(self):
-        return self.base_armor
-    @property
-    def get_base_armor_g(self):
-        return self.base_armor_g
-    @property
-    def get_base_mr(self):
-        return self.base_mr
-    @property
-    def get_base_mr_g(self):
-        return self.base_mr_g
-    @property
-    def get_base_range(self):
-        return self.base_range
-    @property
-    def get_base_move_speed(self):
-        return self.base_move_speed
-    @property
-    def get_baseAS(self):
-        return self.baseAS
-    @property
-    def get_actual_ap(self):
-        return self.actual_ap
-    @property
-    def get_actual_healshield_power(self):
-        return self.actual_healshield_power
-    @property
-    def get_actual_tenacity(self):
-        return self.actual_tenacity
-    @property
-    def get_actual_slow_resist(self):
-        return self.actual_slow_resist
-    @property
-    def get_actual_crit_chance(self):
-        return self.actual_crit_chance
-    @property
-    def get_actual_crit_damage(self):
-        return self.actual_crit_damage
-    @property
-    def get_actual_bonus_armor(self):
-        return self.actual_bonus_armor
-    @property
-    def get_actual_total_armor(self):
-        return self.actual_total_armor
-    @property
-    def get_actual_armorpen_flat(self):
-        return self.actual_armorpen_flat
-    @property
-    def get_actual_armorpen_percent(self):
-        return self.actual_armorpen_percent
-    @property
-    def get_actual_bonus_mr(self):
-        return self.actual_bonus_mr
-    @property
-    def get_actual_total_mr(self):
-        return self.actual_total_mr
-    @property
-    def get_actual_magicpen_flat(self):
-        return self.actual_magicpen_flat
-    @property
-    def get_actual_magicpen_percent(self):
-        return self.actual_magicpen_percent
-    @property
-    def get_actual_lifesteal(self):
-        return self.actual_lifesteal
-    @property
-    def get_actual_physicvamp(self):
-        return self.actual_physicvamp
-    @property
-    def get_actual_omnivamp(self):
-        return self.actual_omnivamp
-    @property
-    def get_actual_ah(self):
-        return self.actual_ah
-    @property
-    def get_as_ratio(self):
-        return self.as_ratio
-    @property
-    def get_bonus_as(self):
-        return self.bonus_as
-    @property
-    def get_actual_as(self):
-        return self.actual_as
-    @property
-    def get_actual_as_ratio(self):
-        return self.actual_as_ratio
-    @property
-    def get_actual_bonus_as_level(self):
-        return self.actual_bonus_as_level
-    @property
-    def get_actual_bonus_as_external(self):
-        return self.actual_bonus_as_external
-    @property
-    def get_actual_hp(self):
-        return self.actual_hp
-    @property
-    def get_actual_hp_regen(self):
-        return self.actual_hp_regen
-    @property
-    def get_actual_mana(self):
-        return self.actual_mana
-    @property
-    def get_actual_mana_regen(self):
-        return self.actual_mana_regen
-    @property
-    def get_actual_ad(self):
-        return self.actual_ad
-    @property
-    def get_actual_armor(self):
-        return self.actual_armor
-    @property
-    def get_actual_mr(self):
-        return self.actual_mr
-    @property
-    def get_actual_range(self):
-        return self.actual_range
-    @property
-    def get_actual_move_speed(self):
-        return self.actual_move_speed

@@ -7,7 +7,7 @@ from Proyecto.src.Champion import Champion # Importo la clase Champion
 from Proyecto.src.Champions import Karthus
 from Proyecto.src.Champions import Twitch 
 from Proyecto.src.Champions import Maokai 
-from Proyecto.src.Champions import Aatrox 
+from Proyecto.src.Champions import Aatrox
 
 from Proyecto.src.Item import Item # Importo la clase Item
 # Importo los items de su propio archivo .py
@@ -20,6 +20,8 @@ from Proyecto.src.Items import SpiritVisage
 # python -m unittest discover -s tests
 
 class TestChampion(unittest.TestCase):
+
+# TESTEOS MÉTODOS CHAMPION
     def setUp(self): 
         self.Karthus = load_champion("Karthus")
         self.Twitch = load_champion("Twitch")
@@ -31,7 +33,7 @@ class TestChampion(unittest.TestCase):
         self.BlackfireTorch = load_item("BlackfireTorch")  # ap, mana y ah
         self.Thornmail = load_item("Thornmail")            # armadura
         self.SpiritVisage = load_item("SpiritVisage")      # resistencia magica
-    
+
 
     def test_carga_instancia(self):
         """Verifica que los campeones e items se creen correctamente"""
@@ -63,6 +65,32 @@ class TestChampion(unittest.TestCase):
         self.assertGreater(self.Karthus.actual_armor, Karthus_armor_inicial)
         self.assertGreater(self.Karthus.actual_mr, Karthus_mr_inicial)
 
+    def test_level_up_hability(self):
+        Karthus_nivel_q_inicial = self.Karthus.q_level
+        Karthus_nivel_r_inicial = self.Karthus.r_level
+        
+        self.Karthus.level_up_hability("Q")
+        self.Karthus.level_up_hability("R")
+        
+        self.assertGreater(self.Karthus.q_level, Karthus_nivel_q_inicial)
+        self.assertGreater(self.Karthus.r_level, Karthus_nivel_r_inicial)
+        
+        self.Karthus.level_up_hability("Q")
+        self.Karthus.level_up_hability("Q")
+        self.Karthus.level_up_hability("Q")
+        self.Karthus.level_up_hability("Q")
+        self.Karthus.level_up_hability("Q")
+        
+        self.Karthus.level_up_hability("R")
+        self.Karthus.level_up_hability("R")
+        self.Karthus.level_up_hability("R")
+        self.Karthus.level_up_hability("R")
+        
+        print(self.Karthus.q_level)
+        print(self.Karthus.r_level)
+    
+        self.assertEqual(self.Karthus.q_level, 5)
+        self.assertEqual(self.Karthus.r_level, 3)        
 
     def test_add_item(self):
         """Verifica que al agregar items aumenten las estadisticas correctamente de forma acumulativa"""
@@ -111,14 +139,14 @@ class TestChampion(unittest.TestCase):
         Karthus_ah_inicial_2 = self.Karthus.actual_ah
         Karthus_hp_inicial_2 = self.Karthus.actual_hp
         Karthus_hp_regen_inicial = self.Karthus.actual_hp_regen
-        Karthus_mr_inicial = self.Karthus.actual_mr
+        Karthus_mr_inicial = self.Karthus.actual_total_mr
 
         self.Karthus.add_item(self.SpiritVisage)
 
         self.assertGreater(self.Karthus.actual_ah, Karthus_ah_inicial_2)
         self.assertGreater(self.Karthus.actual_hp, Karthus_hp_inicial_2)
         self.assertGreater(self.Karthus.actual_hp_regen, Karthus_hp_regen_inicial)
-        self.assertGreater(self.Karthus.actual_mr, Karthus_mr_inicial)
+        self.assertGreater(self.Karthus.actual_total_mr, Karthus_mr_inicial)
 
 
     def test_remove_item(self):
@@ -130,7 +158,7 @@ class TestChampion(unittest.TestCase):
         Karthus_hp_inicial = self.Karthus.actual_hp
         Karthus_hp_regen_inicial = self.Karthus.actual_hp_regen
         Karthus_armor_inicial = self.Karthus.actual_total_armor
-        Karthus_mr_inicial = self.Karthus.actual_mr
+        Karthus_mr_inicial = self.Karthus.actual_total_mr
         Karthus_ah_inicial = self.Karthus.actual_ah
 
         self.Karthus.remove_item(self.Thornmail)
@@ -143,7 +171,7 @@ class TestChampion(unittest.TestCase):
         self.assertLess(self.Karthus.actual_hp, Karthus_hp_inicial)
         self.assertLess(self.Karthus.actual_hp_regen, Karthus_hp_regen_inicial)
         self.assertLess(self.Karthus.actual_ah, Karthus_ah_inicial)
-        self.assertLess(self.Karthus.actual_mr, Karthus_mr_inicial)
+        self.assertLess(self.Karthus.actual_total_mr, Karthus_mr_inicial)
 
 
     def test_list_items(self):
@@ -161,17 +189,18 @@ class TestChampion(unittest.TestCase):
                          #Los nombres no son los mismos con los que los inicialicé, esas son abreviaciones, list_items() muestra el nombre completo
                          ["Guinsoo's Rageblade", "Opportunity", "Blackfire Torch", "Thornmail", "Spirit Visage", "Blackfire Torch"])
 
-
-    def test_realizar_daño_sinitems(self):
-        """Verficamos que los campeones se ataquen correctamente"""
+    # Rearmar
+    
+    def test_aa_sinitems(self):
+        """Verficamos que los campeones se ataquen con AA(Auto Ataque) correctamente"""
         Twitch_hp_inicial = self.Twitch.actual_hp
         Aatrox_hp_inicial = self.Aatrox.actual_hp
 
         self.Twitch.realizar_daño(self.Aatrox)
 
         # Verifica que los dos reciban daño
-        self.assertLess(self.Aatrox.actual_hp, Aatrox_hp_inicial)
         self.assertLess(self.Twitch.actual_hp, Twitch_hp_inicial)
+        self.assertLess(self.Aatrox.actual_hp, Aatrox_hp_inicial)
 
         # Verifica si Twitch murio y Aatrox sigue vivo
         if (self.Twitch.actual_hp <= 0):
@@ -191,9 +220,10 @@ class TestChampion(unittest.TestCase):
         if not (self.Aatrox.its_alive) and not (self.Twitch.its_alive):
             self.assertEqual(self.Aatrox.actual_hp, 0)
             self.assertEqual(self.Twitch.actual_hp, 0)
-        
-
-    def test_realizar_daño_conitems(self):
+    
+    
+    # Rearmar
+    def test_aa_conitems(self):
         """Verficamos que los campeones se ataquen correctamente con items"""
         Twitch_hp_inicial = self.Twitch.actual_hp
         Maokai_hp_inicial = self.Maokai.actual_hp
@@ -225,24 +255,18 @@ class TestChampion(unittest.TestCase):
         if not (self.Maokai.its_alive) and not (self.Twitch.its_alive):
             self.assertEqual(self.Maokai.actual_hp, 0)
             self.assertEqual(self.Twitch.actual_hp, 0)
-
     
+    
+    # Rearmar
     def test_muerte_instantanea(self):
-        """
-        Arreglar.
-    
-        Aatrox.actual_ad = 1000 no está cambiando el AD de Aatrox
-        se terminan matando ambos y da OK porque Maokai muere y su vida no baja de 0
-    
-        Aún así, deberia cambiar el AD de Aatrox a 1000 :P
-        """
-        
         """Verifica que un campeón muera al recibir suficiente daño de un golpe"""
-        Aatrox.actual_ad = 1000
-        self.Aatrox.realizar_daño(self.Maokai)
+        self.Aatrox.simple_stats()
+        self.Aatrox.actual_ad = 1000
+        self.Aatrox.simple_stats()
+        self.Aatrox.aa(self.Maokai)
         self.assertFalse(self.Maokai.its_alive)
         self.assertEqual(self.Maokai.actual_hp, 0)
-        
+    
      
     def test_armor(self):
         """Verifica que la armadura base, bonus y total se calculen correctamente"""
@@ -268,6 +292,7 @@ class TestChampion(unittest.TestCase):
         self.assertGreater(self.Karthus.actual_bonus_armor, Karthus_actual_bonus_armor_inicial)
         self.assertGreater(self.Karthus.actual_total_armor, Karthus_actual_total_armor_inicial)
         
+        
     def test_mr(self):
         """Verifica que la resistencia mágica base, bonus y total se calcules correctamente"""
         print("MR base: ", self.Karthus.base_mr)
@@ -291,3 +316,105 @@ class TestChampion(unittest.TestCase):
         self.assertEqual(self.Karthus.actual_mr, Karthus_actual_mr_inicial)
         self.assertGreater(self.Karthus.actual_bonus_mr, Karthus_actual_bonus_mr_inicial)
         self.assertGreater(self.Karthus.actual_total_mr, Karthus_actual_total_mr_inicial)
+        
+        
+# TESTEOS MÉTODOS KARTHUS
+    """def test_karthus_passive(self):"""
+
+    def test_karthus_q(self):
+        Twitch_hp_inicial = self.Twitch.actual_hp
+        Karthus_mana_inicial = self.Karthus.actual_mana
+        
+        # Karthus usa la Q con suficiente maná
+        self.Karthus.q(self.Twitch)
+        
+        self.assertLess(self.Twitch.actual_hp, Twitch_hp_inicial)
+        self.assertLess(self.Karthus.actual_mana, Karthus_mana_inicial)
+    
+        # Karthus usa la Q sin suficiente maná
+        self.Karthus.actual_mana = 18 # Q requiere 20 de maná
+        Twitch_hp_inicial_2 = self.Twitch.actual_hp
+        
+        self.Karthus.q(self.Twitch)
+        
+        self.assertEqual(self.Twitch.actual_hp, Twitch_hp_inicial_2)
+        self.assertEqual(self.Karthus.actual_mana, 18)
+        
+        
+    def test_karthus_w(self):
+        Maokai_mr_inicial = self.Maokai.actual_total_mr
+        Karthus_mana_inicial = self.Karthus.actual_mana
+        
+        print(f"MR de Maokai: {self.Maokai.actual_total_mr} .")
+        self.Karthus.w(self.Maokai)
+        print(f"MR de Maokai: {self.Maokai.actual_total_mr} .")
+        
+        """
+        El efecto de la W no se debe stackear   #Idea: Que los campeones tengan un string dinamico donde se listen los buff/debuff
+        """
+        self.assertLess(self.Maokai.actual_total_mr, Maokai_mr_inicial)
+        self.assertLess(self.Karthus.actual_mana, Karthus_mana_inicial)
+            
+            
+    def test_karthus_e(self):
+        
+        print(f"Twitch hp inicial: {self.Twitch.actual_hp}")
+        Twitch_hp_inicial = self.Twitch.actual_hp
+        print(f"Karthus AP: {self.Karthus.actual_ap}")
+        print(f"Twitch MR: {self.Twitch.actual_total_mr}")
+        print(f"Karthus mana inicial: {self.Karthus.actual_mana}")
+        Karthus_mana_inicial = self.Karthus.actual_mana
+        
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        self.Karthus.e(self.Twitch) # Toggle = True
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        self.Karthus.e(self.Twitch) # Toggle = False
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        self.assertLess(self.Twitch.actual_hp, Twitch_hp_inicial)
+        self.assertLess(self.Karthus.actual_mana, Karthus_mana_inicial)
+        
+        print(f"Karthus mana antes mod: {self.Karthus.actual_mana}")
+        self.Karthus.actual_mana = 10
+        print(f"Karthus mana post mod: {self.Karthus.actual_mana}")
+        Twitch_hp_inicial_2 = self.Twitch.actual_hp
+        print(f"Twitch hp inicial 2: {self.Twitch.actual_hp}")
+        
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        self.Karthus.e(self.Twitch) # Toggle deberia mantenerse en False despues del último Toggle = False por falta de maná para activarlo
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        
+        self.assertEqual(self.Twitch.actual_hp, Twitch_hp_inicial_2)
+        self.assertEqual(self.Karthus.actual_mana, 10)
+        
+        print(f"Karthus mana antes mod: {self.Karthus.actual_mana}")
+        self.Karthus.actual_mana = 300
+        print(f"Karthus mana post mod: {self.Karthus.actual_mana}")
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        self.Karthus.e(self.Twitch) # Toggle = True
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        self.assertEqual(self.Karthus.e_toggle, True)
+        Twitch_hp_inicial_3 = self.Twitch.actual_hp
+        print(f"Twitch hp inicial 3: {self.Twitch.actual_hp}")
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        self.Karthus.e(self.Twitch) # Toggle = False
+        print(f"Toggle: {self.Karthus.e_toggle}")
+        self.assertEqual(self.Karthus.e_toggle, False)
+        self.assertLess(self.Twitch.actual_hp, Twitch_hp_inicial_3)
+        
+    
+    def test_karthus_r(self):        
+        Aartox_hp_inicial = self.Aatrox.actual_hp
+        Karthus_mana_inicial = self.Karthus.actual_mana
+        
+        self.Karthus.r(self.Aatrox)
+        
+        self.assertLess(self.Aatrox.actual_hp, Aartox_hp_inicial)
+        self.assertLess(self.Karthus.actual_mana, Karthus_mana_inicial)
+        
+        self.Karthus.actual_mana = 57
+        Aartox_hp_inicial_2 = self.Aatrox.actual_hp
+        
+        self.Karthus.r(self.Aatrox)
+        
+        self.assertEqual(self.Aatrox.actual_hp, Aartox_hp_inicial_2)
+        self.assertEqual(self.Karthus.actual_mana, 57)

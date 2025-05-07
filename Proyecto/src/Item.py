@@ -3,7 +3,7 @@ import os
 
 ITEM_FOLDER = "Proyecto.src.Items" # Carpeta que contiene los items
 
-# Éstos dos métodos son para que el Main pueda cargar los items correctamente desde sus archivos .py
+# Éstos dos métodos son para que se pueda cargar los items correctamente desde sus archivos .py
 
 """Método para cargar los items"""
 def load_item(item_name: str):
