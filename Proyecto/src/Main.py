@@ -2,6 +2,22 @@ from .Champion import Champion
 from .Item import Item
 from .Champion import load_champion
 from .Item import load_item
+import pygame
+import sys
+
+pygame.init()
+
+PANTALLA_ANCHO = 800
+PANTALLA_ALTO = 600
+
+#Creo la pantalla
+pantalla = pygame.display.set_mode((PANTALLA_ANCHO, PANTALLA_ALTO))
+pygame.display.set_caption("TFT de la salada")
+
+
+
+
+
 
 # Campeones
 Aatrox = load_champion("Aatrox")
