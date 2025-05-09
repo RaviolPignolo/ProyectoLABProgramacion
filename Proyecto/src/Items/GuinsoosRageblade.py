@@ -1,20 +1,20 @@
 from ..Item import Item
 
-class Jaksho (Item):
+class GuinsoosRageblade (Item):
     def __init__(self):
         super().__init__(
-            name = "Jak'sho",
-            cost = 3200,
-            sell = 2240,
-            hp = 350,
+            name = "Guinsoo's Rageblade",
+            cost = 3000,
+            sell = 2100,
+            hp = 0,
             hp_regen = 0,
             mana = 0,
             mana_regen = 0,
-            ad = 0,
-            as_ = 0,
-            ap = 0,
-            armor = 45,
-            mr = 45,
+            ad = 30,
+            as_ = 0.25, # 25%
+            ap = 30,
+            armor = 0,
+            mr = 0,
             healshield_power = 0,
             tenacity = 0,
             crit_chance = 0,

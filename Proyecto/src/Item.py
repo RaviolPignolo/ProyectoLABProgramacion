@@ -100,16 +100,16 @@ class Item:
             "Magic Resistance": self.mr,
             "Heal & shield power(%)": (self.healshield_power * 100),
             "Tenacity": (self.tenacity * 100),
-            "Critical strike chance(%)": (self.criticalStrikeChance * 100),
-            "Critical strike damage(%)": (self.criticalStrikeDamage * 100),
-            "Lethality": self.armorPenetrationFlat,
-            "Armor penetration(%)": (self.armorPenetrationPercent * 100),
-            "MagicResist flat penetration": self.magicPenetrationFlat,
-            "MagicResist penetration(%)": (self.magicPenetrationPercent * 100),
-            "Lifesteal(%)": (self.lifeSteal * 100),
-            "Ability haste": self.abilityHaste,
-            "Movement Speed": self.moveSpeedFlat,
-            "Movement Speed(%)": (self.moveSpeed * 100)
+            "Critical strike chance(%)": (self.crit_chance * 100),
+            "Critical strike damage(%)": (self.crit_damage * 100),
+            "Lethality": self.armorpen_flat,
+            "Armor penetration(%)": (self.armorpen_percent * 100),
+            "MagicResist flat penetration": self.magicpen_flat,
+            "MagicResist penetration(%)": (self.magicpen_percent * 100),
+            "Lifesteal(%)": (self.lifesteal * 100),
+            "Ability haste": self.ah,
+            "Movement Speed": self.movespeed_flat,
+            "Movement Speed(%)": (self.movespeed_percent * 100)
         }
         """Recorro el diccionario y muestro los valores mayores a 0 que tenga el item"""
         for stat_name, stat_value in stats.items():

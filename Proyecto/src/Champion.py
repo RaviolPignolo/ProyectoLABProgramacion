@@ -1,7 +1,6 @@
 import importlib
 import os
 import math
-import pygame
 from dataclasses import field
 from .Item import Item
 
