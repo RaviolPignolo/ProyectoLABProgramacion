@@ -66,8 +66,13 @@ def menu():
 
 def champion_list_menu():
     selected_champion = 0
-    back_button_rect = pygame.Rect(10, 10, 100, 40) # Define un rectángulo para el botón de "Atrás"
-    
+    back_button_rect = pygame.Rect(10, 10, 100, 40)  # Define un rectángulo para el botón de "Atrás"
+    champions_per_row = 5
+    x_offset = 150
+    y_offset = 200
+    spacing_x = 140  # Espacio horizontal entre campeones
+    spacing_y = 120  # Espacio vertical entre filas
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -75,15 +80,23 @@ def champion_list_menu():
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
-                    selected_champion = (selected_champion + 1) % len(champions_list)
+                    if (selected_champion + champions_per_row) < len(champions_list):
+                        selected_champion += champions_per_row
                 elif event.key == pygame.K_UP:
-                    selected_champion = (selected_champion - 1) % len(champions_list)
+                    if (selected_champion - champions_per_row) >= 0:
+                        selected_champion -= champions_per_row
+                elif event.key == pygame.K_RIGHT:
+                    if (selected_champion % champions_per_row) < (champions_per_row - 1) and (selected_champion + 1) < len(champions_list):
+                        selected_champion += 1
+                elif event.key == pygame.K_LEFT:
+                    if (selected_champion % champions_per_row) > 0:
+                        selected_champion -= 1
                 elif event.key == pygame.K_RETURN:
                     # Aquí puedes mostrar los detalles del campeón seleccionado
                     champion_details(champions_list[selected_champion])
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button_rect.collidepoint(event.pos):
-                    return # Regresar al menú anterior
+                    return  # Regresar al menú anterior
 
         pantalla.fill(NEGRO)
         
@@ -94,15 +107,23 @@ def champion_list_menu():
         pantalla.blit(back_text, back_text_rect)
         
         for i, Champion in enumerate(champions_list):
+            # Calcula la posición en la cuadrícula
+            row = i // champions_per_row
+            col = i % champions_per_row
+            x_position = x_offset + col * spacing_x
+            y_position = y_offset + row * spacing_y
+            
+            # Cargar y dibujar la imagen del campeón
             image = pygame.image.load(Champion['image'])
-            image_rect = image.get_rect(center=(100, 200 + i * 60))
+            image_rect = image.get_rect(center=(x_position, y_position))
             pantalla.blit(image, image_rect)
             
+            # Dibujar el nombre del campeón
             if i == selected_champion:
                 text = font.render(Champion['name'], True, BLANCO)
             else:
                 text = font.render(Champion['name'], True, GRIS)
-            text_rect = text.get_rect(midleft=(150, 200 + i * 60))
+            text_rect = text.get_rect(midtop=(x_position, y_position + 40))
             pantalla.blit(text, text_rect)
         
         pygame.display.update()
