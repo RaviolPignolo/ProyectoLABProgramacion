@@ -7,11 +7,12 @@ import sys
 
 pygame.init()
 
-PANTALLA_ANCHO = 800
-PANTALLA_ALTO = 600
+PANTALLA_ANCHO = 1900
+PANTALLA_ALTO = 1080
 
 NEGRO = (0, 0, 0)
 BLANCO = (255, 255, 255)
+GRIS = (128, 128, 128)
 
 # Lista de los campeones e items
 champions_list = [
@@ -33,9 +34,9 @@ champions_list = [
 ]
 items_list = [
     {'name': 'Bloodthirster', 'details': 'Details about Bloodthirster', 'image': 'Proyecto/src/Assets/Images/Items/Bloodthirster_item.png'},
-    {'name': 'Guinsoo', 'details': 'Details about Guinsoo', 'image': 'Proyecto/src/Assets/Images/Items/GuinsoosRageblade_item.png'},
+    {'name': 'GuinsoosRageblade', 'details': 'Details about Guinsoo', 'image': 'Proyecto/src/Assets/Images/Items/GuinsoosRageblade_item.png'},
     {'name': 'Opportunity', 'details': 'Details about Opportunity', 'image': 'Proyecto/src/Assets/Images/Items/Opportunity_item.png'},
-    {'name': 'Jaksho', 'details': 'Details about Jaksho', 'image': 'Proyecto/src/Assets/Images/Items/JakShoTheProtean_item.png'},
+    {'name': 'JakShosTheProtean', 'details': 'Details about Jaksho', 'image': 'Proyecto/src/Assets/Images/Items/JakShoTheProtean_item.png'},
     {'name': 'Thornmail', 'details': 'Details about Thornmail', 'image': 'Proyecto/src/Assets/Images/Items/Thornmail_item.png'},
     {'name': 'SpiritVisage', 'details': 'Details about SpiritVisage', 'image': 'Proyecto/src/Assets/Images/Items/SpiritVisage_item.png'},
     {'name': 'BlackfireTorch', 'details': 'Details about BlackfireTorch', 'image': 'Proyecto/src/Assets/Images/Items/BlackfireTorch_item.png'},
@@ -57,9 +58,9 @@ def menu():
     pantalla.fill(NEGRO)
     for i, option in enumerate(menu_options):
         if i == selected_option:
-            text = font.render(option, True, (BLANCO))
+            text = font.render(option, True, BLANCO)
         else:
-            text = font.render(option, True, (100, 100, 100))
+            text = font.render(option, True, GRIS)
         text_rect = text.get_rect(center=(PANTALLA_ANCHO // 2, PANTALLA_ALTO // 2 + i * 40))
         pantalla.blit(text, text_rect)
 
@@ -100,7 +101,7 @@ def champion_list_menu():
             if i == selected_champion:
                 text = font.render(Champion['name'], True, BLANCO)
             else:
-                text = font.render(Champion['name'], True, (100, 100, 100))
+                text = font.render(Champion['name'], True, GRIS)
             text_rect = text.get_rect(midleft=(150, 200 + i * 60))
             pantalla.blit(text, text_rect)
         
@@ -120,17 +121,15 @@ def items_list_menu():
                 if event.key == pygame.K_DOWN:
                     selected_item = (selected_item + 1) % len(items_list)
                 elif event.key == pygame.K_UP:
-                    selected_champion = (selected_item - 1) % len(items_list)
+                    selected_item = (selected_item - 1) % len(items_list)
                 elif event.key == pygame.K_RETURN:
-                    # Aquí puedes mostrar los detalles del campeón seleccionado
                     items_details(items_list[selected_item])
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button_rect.collidepoint(event.pos):
-                    return # Regresar al menú anterior
+                    return
 
         pantalla.fill(NEGRO)
         
-        # Dibuja el botón de "Atrás"
         pygame.draw.rect(pantalla, BLANCO, back_button_rect)
         back_text = font.render('Atrás', True, NEGRO)
         back_text_rect = back_text.get_rect(center=back_button_rect.center)
@@ -152,9 +151,36 @@ def items_list_menu():
 
 
 def champion_details(champion):
-    # Aquí crearías una ventana para mostrar los detalles del campeón
-    print(f"Detalles de {champion['name']}: {champion['details']}")
-    # Puedes implementar una nueva ventana si deseas mostrar los detalles en pantalla
+    back_button_rect = pygame.Rect(10, 10, 100, 40)
+    campeon_instancia = load_champion(champion['name'])
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button_rect.collidepoint(event.pos):
+                    return
+
+        pantalla.fill(NEGRO)
+        
+        pygame.draw.rect(pantalla, BLANCO, back_button_rect)
+        back_text = font.render('Atrás', True, NEGRO)
+        back_text_rect = back_text.get_rect(center=back_button_rect.center)
+        pantalla.blit(back_text, back_text_rect)
+        
+        image = pygame.image.load(champion['image'])
+        image_rect = image.get_rect(center=(100, 200))
+        pantalla.blit(image, image_rect)
+        
+        champion_info_text = campeon_instancia.base_stats()
+        y_offset = 300
+        for line in champion_info_text.split('\n'):
+            champion_info_render = font.render(line, True, BLANCO)
+            pantalla.blit(champion_info_render, (100, y_offset))
+            y_offset += 50
+    
+        pygame.display.update()
 
 def items_details(item):
     back_button_rect = pygame.Rect(10, 10, 100, 40)
@@ -180,11 +206,50 @@ def items_details(item):
         pantalla.blit(image, image_rect)
         
         item_info_text = item_instancia.item_info()
-        item_info_render = font.render(item_info_text, True, BLANCO)
-        pantalla.blit(item_info_render, (20, 80))
+        y_offset = 300
+        for line in item_info_text.split('\n'):
+            item_info_render = font.render(line, True, BLANCO)
+            pantalla.blit(item_info_render, (100, y_offset))
+            y_offset += 50 # Un espacio entre líneas
         
         pygame.display.update()
 
+def pantalla_select():
+    
+    lista_rojo = []
+    lista_azul = []
+    
+    
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        
+        
+        
+        
+        pygame.display.update()
+
+def pantalla_juego():
+
+    arena_imagen = pygame.image.load('Proyecto/src/Assets/Images/Arena.png')
+    arena_imagen = pygame.transform.scale(arena_imagen, (PANTALLA_ANCHO, (PANTALLA_ALTO / 1.5)))
+    
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEMOTION:
+                print("Posición:", event.pos)
+                
+        pantalla.fill(NEGRO)
+        pantalla.blit(arena_imagen, (0, 0))
+        
+        
+                
+        pygame.display.update()
 def main():
     global selected_option
     while True:
@@ -202,7 +267,7 @@ def main():
                         pygame.quit()
                         sys.exit()
                     elif menu_options[selected_option] == 'Inicio':
-                        # Aquí iría el código para iniciar el juego
+                        pantalla_juego()
                         pass
                     elif menu_options[selected_option] == 'Campeones':
                         champion_list_menu()
@@ -227,28 +292,28 @@ if __name__ == '__main__':
 
 
 # Campeones
-Aatrox = load_champion("Aatrox")
-Ahri = load_champion("Ahri")
-Akali = load_champion("Akali")
-Akshan = load_champion("Akshan")
-Alistar = load_champion("Alistar")
-Ambessa = load_champion("Ambessa")
-Amumu = load_champion("Amumu")
-Anivia = load_champion("Anivia")
-Caitlyn = load_champion("Caitlyn")
-Jhin = load_champion("Jhin")
-Karthus = load_champion("Karthus")
-Maokai = load_champion("Maokai")
-Nautilus = load_champion("Nautilus")
-TahmKench = load_champion("TahmKench")
-Twitch = load_champion("Twitch")
+#Aatrox = load_champion("Aatrox")
+#Ahri = load_champion("Ahri")
+#Akali = load_champion("Akali")
+#Akshan = load_champion("Akshan")
+#Alistar = load_champion("Alistar")
+#Ambessa = load_champion("Ambessa")
+#Amumu = load_champion("Amumu")
+#Anivia = load_champion("Anivia")
+#Caitlyn = load_champion("Caitlyn")
+#Jhin = load_champion("Jhin")
+#Karthus = load_champion("Karthus")
+#Maokai = load_champion("Maokai")
+#Nautilus = load_champion("Nautilus")
+#TahmKench = load_champion("TahmKench")
+#Twitch = load_champion("Twitch")
 
 # Items
-Bloodthirster = load_item("Bloodthirster")
-Guinsoo = load_item("Guinsoo")
-Opportunity = load_item("Opportunity")
-Jaksho = load_item("Jaksho")
-Thornmail = load_item("Thornmail")
-SpiritVisage = load_item("SpiritVisage")
-BlackfireTorch = load_item("BlackfireTorch")
+#Bloodthirster = load_item("Bloodthirster")
+#Guinsoo = load_item("Guinsoo")
+#Opportunity = load_item("Opportunity")
+#Jaksho = load_item("Jaksho")
+#Thornmail = load_item("Thornmail")
+#SpiritVisage = load_item("SpiritVisage")
+#BlackfireTorch = load_item("BlackfireTorch")
 

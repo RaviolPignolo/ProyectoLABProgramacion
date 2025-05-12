@@ -221,6 +221,38 @@ class Champion:
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= MÉTODOS RELACIONADOS CON EL SEGUIMIENTO DE LAS ESTADISTICAS =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+    def base_stats(self):
+        base_stats = {
+            "HP": self.base_hp,
+            "HP growth": self.base_hp_g,
+            "HP regen": self.base_hp_regen,
+            "HP regen growth": self.base_hp_regen_g,
+            "Mana": self.base_mana,
+            "Mana growth": self.base_mana_g,
+            "Mana regen": self.base_mana_regen,
+            "Mana regen growth": self.base_mana_regen_g,
+            "Energy": self.base_energy,
+            "Energy regen": self.base_energy_regen,
+            "AD": self.base_ad,
+            "AD growth": self.base_ad_g,
+            "Armor": self.base_armor,
+            "Armor growth": self.base_armor_g,
+            "MR": self.base_mr,
+            "MR growth": self.base_mr_g,
+            "Range": self.base_range,
+            "Move Speed": self.base_move_speed,
+            "Base Attack Speed": self.baseAS,
+            "Attack Speed Ratio": self.as_ratio,
+            "Bonus Attack Speed": self.bonus_as,
+        }
+        stats_lines = []
+        for stat_name, stat_value in base_stats.items():
+            if stat_value > 0:
+                stats_lines.append(f"{stat_name}: {stat_value}")
+        
+        return "\n".join(stats_lines)
+
+
     """Método para obtener información básica"""
     def simple_stats(self):
         print("Campeón: ", self.name)
@@ -234,7 +266,6 @@ class Champion:
         print("AP: ", self.actual_ap)
         print("Armadura: ", self.actual_total_armor)
         print("Resistencia Mágica: ", self.actual_total_mr)
-        #velocidad de ataque tehe
         print("Ability Haste: ", self.actual_ah)
         print("Chance de Critico: ", self.actual_crit_chance,"%")
         print("Velocidad de movimiento: ", self.actual_move_speed)

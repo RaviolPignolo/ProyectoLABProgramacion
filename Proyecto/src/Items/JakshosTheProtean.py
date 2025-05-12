@@ -1,6 +1,6 @@
 from ..Item import Item
 
-class JakShoTheProtean (Item):
+class JakShosTheProtean (Item):
     def __init__(self):
         super().__init__(
             name = "Jak'sho, The Protean",

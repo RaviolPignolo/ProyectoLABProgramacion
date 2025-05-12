@@ -80,15 +80,14 @@ class Item:
 
     """Método para ver las estadisticas que da el item"""
     def item_info(self):
-        print("Nombre: ", self.name)
-        print("Coste: ", self.cost, " Oro")
-        print("Vendible por: ", self.sell, " Oro")
-        
+        info = {
+            f"Nombre: {self.name}",
+            f"Coste: {self.cost} Oro",
+            f"Vendible por: {self.sell} Oro",
+        }
+        """Creo un diccionario creando el nombre de la estadistica y asignandole un valor
+            stat_name: stat_value"""
         stats = {
-        """
-        Creo un diccionario creando el nombre de la estadistica y asignandole un valor
-            stat_name: stat_value
-        """
             "Health": self.hp,
             "Health Regen(%)": (self.hp_regen * 100),
             "Mana": self.mana,
@@ -111,7 +110,9 @@ class Item:
             "Movement Speed": self.movespeed_flat,
             "Movement Speed(%)": (self.movespeed_percent * 100)
         }
-        """Recorro el diccionario y muestro los valores mayores a 0 que tenga el item"""
+        
         for stat_name, stat_value in stats.items():
             if stat_value > 0:
-                print(f"{stat_name}: {stat_value}")
+                info.append(f"{stat_name}: {stat_value}")
+        
+        return "\n".join(info)
