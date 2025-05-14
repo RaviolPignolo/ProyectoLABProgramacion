@@ -70,7 +70,7 @@ def champion_list_menu():
     champions_per_row = 5
     x_offset = 150
     y_offset = 200
-    spacing_x = 140  # Espacio horizontal entre campeones
+    spacing_x = 140  # Espacio horizontal entre filas
     spacing_y = 120  # Espacio vertical entre filas
 
     while True:
@@ -92,11 +92,10 @@ def champion_list_menu():
                     if (selected_champion % champions_per_row) > 0:
                         selected_champion -= 1
                 elif event.key == pygame.K_RETURN:
-                    # Aquí puedes mostrar los detalles del campeón seleccionado
                     champion_details(champions_list[selected_champion])
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button_rect.collidepoint(event.pos):
-                    return  # Regresar al menú anterior
+                    return
 
         pantalla.fill(NEGRO)
         
@@ -157,11 +156,10 @@ def items_list_menu():
                     if (selected_item % item_per_row) > 0:
                         selected_item -= 1
                 elif event.key == pygame.K_RETURN:
-                    # Aquí puedes mostrar los detalles del campeón seleccionado
                     items_details(items_list[selected_item])
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button_rect.collidepoint(event.pos):
-                    return  # Regresar al menú anterior
+                    return
 
         pantalla.fill(NEGRO)
         
@@ -177,12 +175,12 @@ def items_list_menu():
             x_position = x_offset + col * spacing_x
             y_position = y_offset + row * spacing_y
             
-            # Cargar y dibujar la imagen del campeón
+            # Cargar y dibujar la imagen del item
             image = pygame.image.load(Item['image'])
             image_rect = image.get_rect(center=(x_position, y_position))
             pantalla.blit(image, image_rect)
             
-            # Dibujar el nombre del campeón
+            # Dibujar el nombre del item
             if i == selected_item:
                 text = font.render(Item['name'], True, BLANCO)
             else:
@@ -290,6 +288,15 @@ def pantalla_juego():
     MAX_CELDAS_X = PANTALLA_ANCHO // CELDA_ANCHO
     MAX_CELDAS_Y = int(PANTALLA_ALTO / 1.5) // CELDA_ALTO
 
+    """
+    orden_turnos = []
+    turno = 1
+
+    for Champion in orden_turnos:
+        load_champion['name']
+    """
+
+
     arena_imagen = pygame.image.load('Proyecto/src/Assets/Images/Arena.png')
     arena_imagen = pygame.transform.scale(arena_imagen, (PANTALLA_ANCHO, int(PANTALLA_ALTO / 1.5)))
     
@@ -297,6 +304,19 @@ def pantalla_juego():
     champion1_image = pygame.transform.scale(champion1_image, (CELDA_ANCHO, CELDA_ALTO))
     champion1_x = 3
     champion1_y = 2
+    
+    champion2_image = pygame.image.load('Proyecto/src/Assets/Images/Iconos/Twitch_icon.png')
+    champion2_image = pygame.transform.scale(champion2_image, (CELDA_ANCHO, CELDA_ALTO))
+    champion2_x = 6
+    champion2_y = 4
+    
+    champion1_pos_x = champion1_x * CELDA_ANCHO
+    champion1_pos_y = champion1_y * CELDA_ALTO
+    pantalla.blit(champion1_image, (champion1_pos_x, champion1_pos_y))
+    
+    champion2_pos_x = champion2_x * CELDA_ANCHO
+    champion2_pos_y = champion2_y * CELDA_ALTO
+    pantalla.blit(champion2_image, (champion2_pos_x, champion2_pos_y))
     
     while True:
         for event in pygame.event.get():
@@ -331,9 +351,7 @@ def pantalla_juego():
                 text = font.render(f"{x // CELDA_ANCHO}, {y // CELDA_ALTO}", True, BLANCO)
                 pantalla.blit(text, (x + 5, y + 5))
                 
-        champion1_pos_x = champion1_x * CELDA_ANCHO
-        champion1_pos_y = champion1_y * CELDA_ALTO
-        pantalla.blit(champion1_image, (champion1_pos_x, champion1_pos_y))
+        
         
                 
         pygame.display.update()
