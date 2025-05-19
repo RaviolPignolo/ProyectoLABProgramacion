@@ -14,6 +14,8 @@ NEGRO = (0, 0, 0)
 BLANCO = (255, 255, 255)
 GRIS = (128, 128, 128)
 
+FONT = pygame.font.Font("Proyecto/src/Assets/Fonts/BeaufortforLOL-Medium.ttf", 36)
+
 # Lista de los campeones e items
 champions_list = [
     {'name': 'Aatrox', 'image': 'Proyecto/src/Assets/Images/Iconos/Aatrox_icon.png'},
@@ -49,7 +51,7 @@ items_list = [
 pantalla = pygame.display.set_mode((PANTALLA_ANCHO, PANTALLA_ALTO))
 pygame.display.set_caption("TFT de la salada")
 
-font = pygame.font.Font(None, 36)
+#font = pygame.font.Font(None, 36)
 
 menu_options = ['Inicio', 'Campeones', 'Items', 'Guia', 'Salir']
 selected_option = 0
@@ -58,9 +60,9 @@ def menu():
     pantalla.fill(NEGRO)
     for i, option in enumerate(menu_options):
         if i == selected_option:
-            text = font.render(option, True, BLANCO)
+            text = FONT.render(option, True, BLANCO)
         else:
-            text = font.render(option, True, GRIS)
+            text = FONT.render(option, True, GRIS)
         text_rect = text.get_rect(center=(PANTALLA_ANCHO // 2, PANTALLA_ALTO // 2 + i * 40))
         pantalla.blit(text, text_rect)
 
@@ -101,7 +103,7 @@ def champion_list_menu():
         
         # Dibuja el botón de "Atrás"
         pygame.draw.rect(pantalla, BLANCO, back_button_rect)
-        back_text = font.render('Atrás', True, NEGRO)
+        back_text = FONT.render('Atrás', True, NEGRO)
         back_text_rect = back_text.get_rect(center=back_button_rect.center)
         pantalla.blit(back_text, back_text_rect)
         
@@ -119,9 +121,9 @@ def champion_list_menu():
             
             # Dibujar el nombre del campeón
             if i == selected_champion:
-                text = font.render(Champion['name'], True, BLANCO)
+                text = FONT.render(Champion['name'], True, BLANCO)
             else:
-                text = font.render(Champion['name'], True, GRIS)
+                text = FONT.render(Champion['name'], True, GRIS)
             text_rect = text.get_rect(midtop=(x_position, y_position + 40))
             pantalla.blit(text, text_rect)
         
@@ -164,7 +166,7 @@ def items_list_menu():
         pantalla.fill(NEGRO)
         
         pygame.draw.rect(pantalla, BLANCO, back_button_rect)
-        back_text = font.render('Atrás', True, NEGRO)
+        back_text = FONT.render('Atrás', True, NEGRO)
         back_text_rect = back_text.get_rect(center=back_button_rect.center)
         pantalla.blit(back_text, back_text_rect)
         
@@ -182,9 +184,9 @@ def items_list_menu():
             
             # Dibujar el nombre del item
             if i == selected_item:
-                text = font.render(Item['name'], True, BLANCO)
+                text = FONT.render(Item['name'], True, BLANCO)
             else:
-                text = font.render(Item['name'], True, GRIS)
+                text = FONT.render(Item['name'], True, GRIS)
             text_rect = text.get_rect(midtop=(x_position, y_position + 40))
             pantalla.blit(text, text_rect)
         
@@ -206,7 +208,7 @@ def champion_details(champion):
         pantalla.fill(NEGRO)
         
         pygame.draw.rect(pantalla, BLANCO, back_button_rect)
-        back_text = font.render('Atrás', True, NEGRO)
+        back_text = FONT.render('Atrás', True, NEGRO)
         back_text_rect = back_text.get_rect(center=back_button_rect.center)
         pantalla.blit(back_text, back_text_rect)
         
@@ -217,7 +219,7 @@ def champion_details(champion):
         champion_info_text = campeon_instancia.base_stats()
         y_offset = 300
         for line in champion_info_text.split('\n'):
-            champion_info_render = font.render(line, True, BLANCO)
+            champion_info_render = FONT.render(line, True, BLANCO)
             pantalla.blit(champion_info_render, (100, y_offset))
             y_offset += 50
     
@@ -238,7 +240,7 @@ def items_details(item):
         pantalla.fill(NEGRO)
         
         pygame.draw.rect(pantalla, BLANCO, back_button_rect)
-        back_text = font.render('Atrás', True, NEGRO)
+        back_text = FONT.render('Atrás', True, NEGRO)
         back_text_rect = back_text.get_rect(center=back_button_rect.center)
         pantalla.blit(back_text, back_text_rect)
         
@@ -249,7 +251,7 @@ def items_details(item):
         item_info_text = item_instancia.item_info()
         y_offset = 300
         for line in item_info_text.split('\n'):
-            item_info_render = font.render(line, True, BLANCO)
+            item_info_render = FONT.render(line, True, BLANCO)
             pantalla.blit(item_info_render, (100, y_offset))
             y_offset += 50 # Un espacio entre líneas
         
@@ -289,11 +291,21 @@ def pantalla_juego():
     MAX_CELDAS_Y = int(PANTALLA_ALTO / 1.5) // CELDA_ALTO
 
     """
+    carga_campeones = ['Karthus', 'Twitch']
+    campeon = []
+    campeon_imagen = []
+    
     orden_turnos = []
     turno = 1
-
-    for Champion in orden_turnos:
-        load_champion['name']
+    
+    # Instancio todos los campeones previamente seleccionados
+    i = 0    
+    for Champion in carga_campeones:
+        campeon[i] = load_champion(Champion['name'])
+    # Cargo las imagenes de los campeones intanciados
+    for Champion in carga_campeones:
+        campeon_imagen[i] = pygame.image.load(Champion['image'])
+        campeon_imagen[i] = pygame.transform.scale(campeon_imagen[i], (CELDA_ANCHO, CELDA_ALTO))
     """
 
 
@@ -347,8 +359,8 @@ def pantalla_juego():
                 rect = pygame.Rect(x, y, CELDA_ANCHO, CELDA_ALTO)
                 pygame.draw.rect(pantalla, BLANCO, rect, 1)
                 
-                font = pygame.font.Font(None, 24)
-                text = font.render(f"{x // CELDA_ANCHO}, {y // CELDA_ALTO}", True, BLANCO)
+                #font = pygame.font.Font(None, 24)
+                text = FONT.render(f"{x // CELDA_ANCHO}, {y // CELDA_ALTO}", True, BLANCO)
                 pantalla.blit(text, (x + 5, y + 5))
                 
         
