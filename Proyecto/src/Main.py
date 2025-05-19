@@ -2,6 +2,9 @@ from .Champion import Champion
 from .Item import Item
 from .Champion import load_champion
 from .Item import load_item
+from Proyecto.src.vista.grafico_personaje import GraficoPersonaje
+from Proyecto.src.vista.grafico_personaje import champions_list
+from Proyecto.src.vista.grafico_item import items_list
 import pygame
 import sys
 
@@ -16,42 +19,10 @@ GRIS = (128, 128, 128)
 
 FONT = pygame.font.Font("Proyecto/src/Assets/Fonts/BeaufortforLOL-Medium.ttf", 36)
 
-# Lista de los campeones e items
-champions_list = [
-    {'name': 'Aatrox', 'image': 'Proyecto/src/Assets/Images/Iconos/Aatrox_icon.png'},
-    {'name': 'Ahri',  'image': 'Proyecto/src/Assets/Images/Iconos/Ahri_icon.png'},
-    {'name': 'Akali', 'image': 'Proyecto/src/Assets/Images/Iconos/Akali_icon.png'},
-    {'name': 'Akshan', 'image': 'Proyecto/src/Assets/Images/Iconos/Akshan_icon.png'},
-    {'name': 'Alistar', 'image': 'Proyecto/src/Assets/Images/Iconos/Alistar_icon.png'},
-    {'name': 'Ambessa', 'image': 'Proyecto/src/Assets/Images/Iconos/Ambessa_icon.png'},
-    {'name': 'Amumu', 'image': 'Proyecto/src/Assets/Images/Iconos/Amumu_icon.png'},
-    {'name': 'Anivia', 'image': 'Proyecto/src/Assets/Images/Iconos/Anivia_icon.png'},
-    {'name': 'Caitlyn', 'image': 'Proyecto/src/Assets/Images/Iconos/Caitlyn_icon.png'},
-    {'name': 'Jhin', 'image': 'Proyecto/src/Assets/Images/Iconos/Jhin_icon.png'},
-    {'name': 'Karthus', 'image': 'Proyecto/src/Assets/Images/Iconos/Karthus_icon.png'},
-    {'name': 'Maokai', 'image': 'Proyecto/src/Assets/Images/Iconos/Maokai_icon.png'},
-    {'name': 'Nautilus', 'image': 'Proyecto/src/Assets/Images/Iconos/Nautilus_icon.png'},
-    {'name': 'TahmKench', 'image': 'Proyecto/src/Assets/Images/Iconos/TahmKench_icon.png'},
-    {'name': 'Twitch', 'image': 'Proyecto/src/Assets/Images/Iconos/Twitch_icon.png'},
-]
-items_list = [
-    {'name': 'Bloodthirster', 'image': 'Proyecto/src/Assets/Images/Items/Bloodthirster_item.png'},
-    {'name': 'GuinsoosRageblade', 'image': 'Proyecto/src/Assets/Images/Items/GuinsoosRageblade_item.png'},
-    {'name': 'Opportunity', 'image': 'Proyecto/src/Assets/Images/Items/Opportunity_item.png'},
-    {'name': 'JakShosTheProtean', 'image': 'Proyecto/src/Assets/Images/Items/JakShoTheProtean_item.png'},
-    {'name': 'Thornmail', 'image': 'Proyecto/src/Assets/Images/Items/Thornmail_item.png'},
-    {'name': 'SpiritVisage', 'image': 'Proyecto/src/Assets/Images/Items/SpiritVisage_item.png'},
-    {'name': 'BlackfireTorch', 'image': 'Proyecto/src/Assets/Images/Items/BlackfireTorch_item.png'},
-]
-
-
-
-
 #Creo la pantalla
 pantalla = pygame.display.set_mode((PANTALLA_ANCHO, PANTALLA_ALTO))
 pygame.display.set_caption("TFT de la salada")
 
-#font = pygame.font.Font(None, 36)
 
 menu_options = ['Inicio', 'Campeones', 'Items', 'Guia', 'Salir']
 selected_option = 0
@@ -308,27 +279,20 @@ def pantalla_juego():
         campeon_imagen[i] = pygame.transform.scale(campeon_imagen[i], (CELDA_ANCHO, CELDA_ALTO))
     """
 
+    campeon1_select: str
+    campeon2_select: str
+    
+    campeon1_select = "Karthus"
+    campeon2_select = "Twitch"
+
+    campeon1_dict = next(c for c in champions_list if c['name'] == campeon1_select)
+    campeon2_dict = next(c for c in champions_list if c['name'] == campeon2_select)
+
+    campeon1 = GraficoPersonaje(3 * CELDA_ANCHO, 2 * CELDA_ALTO, campeon1_dict)
+    campeon2 = GraficoPersonaje(6 * CELDA_ANCHO, 4 * CELDA_ALTO, campeon2_dict)
 
     arena_imagen = pygame.image.load('Proyecto/src/Assets/Images/Arena.png')
     arena_imagen = pygame.transform.scale(arena_imagen, (PANTALLA_ANCHO, int(PANTALLA_ALTO / 1.5)))
-    
-    champion1_image = pygame.image.load('Proyecto/src/Assets/Images/Iconos/Karthus_icon.png')
-    champion1_image = pygame.transform.scale(champion1_image, (CELDA_ANCHO, CELDA_ALTO))
-    champion1_x = 3
-    champion1_y = 2
-    
-    champion2_image = pygame.image.load('Proyecto/src/Assets/Images/Iconos/Twitch_icon.png')
-    champion2_image = pygame.transform.scale(champion2_image, (CELDA_ANCHO, CELDA_ALTO))
-    champion2_x = 6
-    champion2_y = 4
-    
-    champion1_pos_x = champion1_x * CELDA_ANCHO
-    champion1_pos_y = champion1_y * CELDA_ALTO
-    pantalla.blit(champion1_image, (champion1_pos_x, champion1_pos_y))
-    
-    champion2_pos_x = champion2_x * CELDA_ANCHO
-    champion2_pos_y = champion2_y * CELDA_ALTO
-    pantalla.blit(champion2_image, (champion2_pos_x, champion2_pos_y))
     
     while True:
         for event in pygame.event.get():
@@ -339,27 +303,29 @@ def pantalla_juego():
                 print("Posición:", event.pos)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
-                    if champion1_y < MAX_CELDAS_Y - 1:
-                        champion1_y += 1
+                    if campeon1.y // CELDA_ALTO < MAX_CELDAS_Y - 1:
+                        campeon1.movimiento("down", 1)
                 elif event.key == pygame.K_UP:
-                    if champion1_y > 0:
-                        champion1_y -= 1
+                    if campeon1.y // CELDA_ALTO > 0:
+                        campeon1.movimiento("up", 1)
                 elif event.key == pygame.K_RIGHT:
-                    if champion1_x < MAX_CELDAS_X -1:
-                        champion1_x += 1
+                    if campeon1.x // CELDA_ANCHO < MAX_CELDAS_X -1:
+                        campeon1.movimiento("right", 1)
                 elif event.key == pygame.K_LEFT:
-                    if champion1_x > 0:
-                        champion1_x -= 1
+                    if campeon1.x // CELDA_ANCHO > 0:
+                        campeon1.movimiento("left", 1)
                 
         pantalla.fill(NEGRO)
         pantalla.blit(arena_imagen, (0, 0))
+        campeon1.dibujar(pantalla)
+        campeon2.dibujar(pantalla)
+        
         
         for x in range(0, PANTALLA_ANCHO, CELDA_ANCHO):
             for y in range(0, int(PANTALLA_ALTO / 1.5), CELDA_ALTO):
                 rect = pygame.Rect(x, y, CELDA_ANCHO, CELDA_ALTO)
                 pygame.draw.rect(pantalla, BLANCO, rect, 1)
                 
-                #font = pygame.font.Font(None, 24)
                 text = FONT.render(f"{x // CELDA_ANCHO}, {y // CELDA_ALTO}", True, BLANCO)
                 pantalla.blit(text, (x + 5, y + 5))
                 
