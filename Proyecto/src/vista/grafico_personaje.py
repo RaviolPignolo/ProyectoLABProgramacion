@@ -3,7 +3,7 @@ import os
 import pygame
 
 # Lista de los campeones e items
-champions_list = [
+champions_list = [ # Ubicación correspondiente de los iconos de los campeones
     {'name': 'Aatrox', 'image': 'Proyecto/src/Assets/Images/Iconos/Aatrox_icon.png'},
     {'name': 'Ahri',  'image': 'Proyecto/src/Assets/Images/Iconos/Ahri_icon.png'},
     {'name': 'Akali', 'image': 'Proyecto/src/Assets/Images/Iconos/Akali_icon.png'},
@@ -36,6 +36,7 @@ rect: pygame.Rect
 class GraficoPersonaje:
 
     def __init__(self, x, y, campeon):
+        "Constructor"
         self.x = x
         self.y = y
         self.image = pygame.image.load(campeon['image'])
@@ -44,6 +45,7 @@ class GraficoPersonaje:
         
         
     def movimiento(self, direccion, cantidad):
+        "Mueve el personaje en la dirección indicada por las casillas"
         if(direccion == "up"):
             self.y -= cantidad * CELDA_ALTO
         if(direccion == "down"):
@@ -56,8 +58,11 @@ class GraficoPersonaje:
         self.rect.topleft = (self.x, self.y)
             
     def dibujar(self, pantalla):
+        "Dibuja el icono del campeon"
         pantalla.blit(self.image, self.rect)
         
-    
-    def colision(self, another_champion):
-        return self.rect.colliderect(another_champion.rect)
+    def colision(self, another_champion, proximo_x, proximo_y):
+        "Verifica que los campeones no se superpongan"
+        temp_rect = self.rect.copy()
+        temp_rect.topleft = (proximo_x, proximo_y)
+        return temp_rect.colliderect(another_champion.rect)

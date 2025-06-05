@@ -3,7 +3,7 @@ import os
 import pygame
 
 
-items_list = [
+items_list = [ #Ubicación de los iconos correspondintes de los items
     {'name': 'Bloodthirster', 'image': 'Proyecto/src/Assets/Images/Items/Bloodthirster_item.png'},
     {'name': 'GuinsoosRageblade', 'image': 'Proyecto/src/Assets/Images/Items/GuinsoosRageblade_item.png'},
     {'name': 'Opportunity', 'image': 'Proyecto/src/Assets/Images/Items/Opportunity_item.png'},
@@ -21,10 +21,12 @@ rect: pygame.Rect
 class GraficoItem:
     
     def __init__(self, x, y, item):
+        "Constructor"
         self.x = x
         self.y = y
         self.image = pygame.image.load(item['name'])
         self.rect = self.image.get_rect(topleft = (self.x, self.y))
         
     def dibujar(self, pantalla):
+        "Dibuha la imagend el item"
         pantalla.blit(self.image, self.rect)

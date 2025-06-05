@@ -3,10 +3,35 @@ import os
 
 ITEM_FOLDER = "Proyecto.src.Items" # Carpeta que contiene los items
 
+stat_icon = { # Ubicación de los iconos correspondientes a las estadisticas
+    "Gold": "Proyecto/src/Assets/Images/StatIcon/Gold_icon.png",
+    "Health": "Proyecto/src/Assets/Images/StatIcon/Health_icon.png",
+    "Health Regen(%)": "Proyecto/src/Assets/Images/StatIcon/Health_regeneration_icon.png",
+    "Mana": "Proyecto/src/Assets/Images/StatIcon/Mana_icon.png",
+    "Mana Regen(%)": "Proyecto/src/Assets/Images/StatIcon/Mana_regeneration_icon.png",
+    "Attack Damage": "Proyecto/src/Assets/Images/StatIcon/Attack_damage_icon.png",
+    "Ability Power": "Proyecto/src/Assets/Images/StatIcon/Ability_power_icon.png",
+    "Attack Speed(%)": "Proyecto/src/Assets/Images/StatIcon/Attack_speed_icon.png",
+    "Armor": "Proyecto/src/Assets/Images/StatIcon/Armor_icon.png",
+    "Magic Resistance": "Proyecto/src/Assets/Images/StatIcon/Magic_resistance_icon.png",
+    "Heal & shield power(%)": "Proyecto/src/Assets/Images/StatIcon/Heal_and_shield_power_icon.png",
+    "Tenacity": "Proyecto/src/Assets/Images/StatIcon/Tenacity_icon.png",
+    "Critical strike chance(%)": "Proyecto/src/Assets/Images/StatIcon/Critical_strike_chance_icon.png",
+    "Critical strike damage(%)": "Proyecto/src/Assets/Images/StatIcon/Critical_strike_damage_icon.png",
+    "Lethality": "Proyecto/src/Assets/Images/StatIcon/Armor_penetration_icon.png",
+    "Armor penetration(%)": "Proyecto/src/Assets/Images/StatIcon/Armor_penetration_icon.png",
+    "MagicResist flat penetration": "Proyecto/src/Assets/Images/StatIcon/Magic_penetration_icon.png",
+    "MagicResist penetration(%)": "Proyecto/src/Assets/Images/StatIcon/Magic_penetration_icon.png",
+    "Lifesteal(%)": "Proyecto/src/Assets/Images/StatIcon/Life_steal_icon.png",
+    "Ability haste": "Proyecto/src/Assets/Images/StatIcon/Cooldown_reduction_icon.png",
+    "Movement Speed": "Proyecto/src/Assets/Images/StatIcon/Movement_speed_icon.png",
+    "Movement Speed(%)": "Proyecto/src/Assets/Images/StatIcon/Movement_speed_icon.png",
+}
+
 # Éstos dos métodos son para que se pueda cargar los items correctamente desde sus archivos .py
 
-"""Método para cargar los items"""
 def load_item(item_name: str):
+    """Método para cargar los items"""
     module_name = f"{ITEM_FOLDER}.{item_name}"
     try:
         module = importlib.import_module(module_name)
@@ -15,8 +40,8 @@ def load_item(item_name: str):
     except (ModuleNotFoundError, AttributeError):
         raise ImportError(f"No se encontró el item {item_name} en {module_name}")
     
-"""Método para listar los items"""
 def list_items():
+    """Método para listar los items"""
     items = []
     for filename in os.listdir(ITEM_FOLDER):
         if filename.endswith(".py") and filename != "__init__.py":
@@ -51,8 +76,8 @@ class Item:
     movespeed_flat: int
     movespeed_percent: float #%
 
-    """Constructor"""
     def __init__(self, name, cost, sell, hp, hp_regen, mana, mana_regen, ad, as_, ap, armor, mr, healshield_power, tenacity, crit_chance, crit_damage, armorpen_flat, armorpen_percent, magicpen_flat, magicpen_percent, lifesteal, ah, movespeed_flat, movespeed_percent):
+        """Constructor"""
         self.name = name
         self.cost = cost
         self.sell = sell
@@ -78,15 +103,14 @@ class Item:
         self.movespeed_flat = movespeed_flat
         self.movespeed_percent = movespeed_percent
 
-    """Método para ver las estadisticas que da el item"""
     def item_info(self):
-        info = {
-            f"Nombre: {self.name}",
-            f"Coste: {self.cost} Oro",
-            f"Vendible por: {self.sell} Oro",
-        }
-        """Creo un diccionario creando el nombre de la estadistica y asignandole un valor
-            stat_name: stat_value"""
+        """Método para ver las estadisticas que da el item"""
+        info = [
+            {"icon": None, "value": f"Nombre: {self.name}"},
+            {"icon": stat_icon["Gold"], "value": f"Coste: {self.cost}"},
+            {"icon": stat_icon["Gold"], "value": f"Vendible por: {self.sell}"}
+        ]
+        
         stats = {
             "Health": self.hp,
             "Health Regen(%)": (self.hp_regen * 100),
@@ -113,6 +137,6 @@ class Item:
         
         for stat_name, stat_value in stats.items():
             if stat_value > 0:
-                info.append(f"{stat_name}: {stat_value}")
-        
-        return "\n".join(info)
+                icon_path = stat_icon.get(stat_name, None)
+                info.append({"icon": icon_path, "value": stat_value})
+        return info
